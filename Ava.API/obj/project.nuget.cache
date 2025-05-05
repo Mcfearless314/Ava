@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "Pgep54TeHA0=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Miran\\Riderprojects\\Ava\\Ava.API\\Ava.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Miran\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.3\\microsoft.aspnetcore.openapi.9.0.3.nupkg.sha512",
+    "C:\\Users\\Miran\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}

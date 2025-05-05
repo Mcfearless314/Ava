@@ -1,0 +1,6 @@
+@Ava.API_HostAddress = http://localhost:5067
+
+GET {{Ava.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
