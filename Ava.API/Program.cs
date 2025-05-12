@@ -6,18 +6,15 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add configuration to read environment variables with a prefix
-        builder.Configuration.AddEnvironmentVariables(prefix: "Ava_");
 
-        // Add services to the container.
+        builder.Configuration.AddEnvironmentVariables();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        // builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DBConnection"));
+        builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DBConnection"));
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

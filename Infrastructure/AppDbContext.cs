@@ -10,10 +10,6 @@ public class AppDbContext : DbContext
   {
   }
 
-  public AppDbContext()
-  {
-  }
-
   public DbSet<Credentials> Credentials { get; set; }
   public DbSet<Organisation> Organisations { get; set; }
   public DbSet<Project> Projects { get; set; }
@@ -22,6 +18,7 @@ public class AppDbContext : DbContext
   public DbSet<ProjectUser> ProjectUsers { get; set; }
   public DbSet<User> Users { get; set; }
   public DbSet<UserRole> UserRoles { get; set; }
+
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
@@ -89,6 +86,8 @@ public class AppDbContext : DbContext
     // Configuration for ProjectManager entity
     modelBuilder.Entity<ProjectManager>(ent =>
     {
+      ent.HasKey(pm => new { pm.ProjectId, pm.UserId });
+
       ent.Property(pm => pm.UserId).IsRequired();
       ent.Property(pm => pm.ProjectId).IsRequired();
     });
@@ -107,6 +106,8 @@ public class AppDbContext : DbContext
     // Configuration for ProjectUser entity
     modelBuilder.Entity<ProjectUser>(ent =>
     {
+      ent.HasKey(pu => new { pu.ProjectId, pu.UserId });
+
       ent.Property(pu => pu.UserId).IsRequired();
       ent.Property(pu => pu.ProjectId).IsRequired();
     });
@@ -132,6 +133,8 @@ public class AppDbContext : DbContext
     // Configuration for UserRole entity
     modelBuilder.Entity<UserRole>(ent =>
     {
+      ent.HasKey(ur => new { ur.OrganisationId, ur.UserId });
+
       ent.Property(ur => ur.UserId).IsRequired();
       ent.Property(ur => ur.OrganisationId).IsRequired();
       ent.Property(ur => ur.Role).IsRequired();
