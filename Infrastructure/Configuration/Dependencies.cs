@@ -5,14 +5,10 @@ namespace Infrastructure.Configuration;
 
 public static class Dependencies
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
-    {
-        // Entity Framework
-        services.AddDbContext<AppDbContext>(options =>
-        {
-            options.UseSqlServer(connectionString);
-        });
+  public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
+  {
+    services.AddDbContext<AppDbContext>(options => { options.UseSqlite(connectionString); });
 
-        return services;
-    }
+    return services;
+  }
 }
