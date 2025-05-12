@@ -17,6 +17,7 @@ public class AppDbContext : DbContext
   public DbSet<ProjectTask> ProjectTasks { get; set; }
   public DbSet<ProjectUser> ProjectUsers { get; set; }
   public DbSet<User> Users { get; set; }
+  public DbSet<UserActionsLog> UserActionsLogs { get; set; }
   public DbSet<UserRole> UserRoles { get; set; }
 
 
@@ -128,6 +129,19 @@ public class AppDbContext : DbContext
         .WithOne()
         .HasForeignKey<Credentials>(c => c.UserId)
         .OnDelete(DeleteBehavior.Cascade);
+    });
+
+    // Configuration for UserActionsLog entity
+    modelBuilder.Entity<UserActionsLog>(ent =>
+    {
+      ent.HasKey(ual => ual.ActionId);
+
+      ent.Property(ual => ual.ActionLog).IsRequired();
+      ent.Property(ual => ual.ActionPerformedAt).IsRequired();
+      ent.Property(ual => ual.Description).IsRequired().HasMaxLength(500);
+      ent.Property(ual => ual.ActionUser).IsRequired();
+
+
     });
 
     // Configuration for UserRole entity
