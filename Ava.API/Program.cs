@@ -1,4 +1,5 @@
 using Infrastructure.Configuration;
+using Service.Configuration;
 
 public class Program
 {
@@ -12,6 +13,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DBConnection"));
+        builder.Services.AddService();
 
         var app = builder.Build();
 

@@ -47,6 +47,9 @@ Ava.API/obj
 Infrastructure/bin
 Infrastructure/obj
 
+Service/bin 
+Service/obj
+
 /bin
 /obj
 
