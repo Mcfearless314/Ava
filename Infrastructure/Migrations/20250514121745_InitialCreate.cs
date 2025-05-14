@@ -24,6 +24,37 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProjectUsers",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectUsers", x => new { x.ProjectId, x.UserId });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserActionsLogs",
+                columns: table => new
+                {
+                    ActionId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ActionLog = table.Column<int>(type: "INTEGER", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
+                    ActionPerformedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ActionUser = table.Column<Guid>(type: "TEXT", nullable: false),
+                    TargetUser = table.Column<Guid>(type: "TEXT", nullable: true),
+                    TaskId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    OrganisationId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserActionsLogs", x => x.ActionId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -34,26 +65,6 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Projects",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    Subtitle = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    OrganisationId = table.Column<Guid>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Projects_Organisations_OrganisationId",
-                        column: x => x.OrganisationId,
-                        principalTable: "Organisations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,21 +106,30 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProjectManagers",
+                name: "Projects",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Subtitle = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    OrganisationId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProjectManagerId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectManagers", x => new { x.ProjectId, x.UserId });
+                    table.PrimaryKey("PK_Projects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProjectManagers_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
+                        name: "FK_Projects_Organisations_OrganisationId",
+                        column: x => x.OrganisationId,
+                        principalTable: "Organisations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Projects_Users_ProjectManagerId",
+                        column: x => x.ProjectManagerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -135,34 +155,15 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "ProjectUsers",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProjectUsers", x => new { x.ProjectId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_ProjectUsers_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectManagers_ProjectId",
-                table: "ProjectManagers",
-                column: "ProjectId",
-                unique: true);
-
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_OrganisationId",
                 table: "Projects",
                 column: "OrganisationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_ProjectManagerId",
+                table: "Projects",
+                column: "ProjectManagerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectTasks_ProjectId",
@@ -177,25 +178,25 @@ namespace Infrastructure.Migrations
                 name: "Credentials");
 
             migrationBuilder.DropTable(
-                name: "ProjectManagers");
-
-            migrationBuilder.DropTable(
                 name: "ProjectTasks");
 
             migrationBuilder.DropTable(
                 name: "ProjectUsers");
 
             migrationBuilder.DropTable(
-                name: "UserRoles");
+                name: "UserActionsLogs");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "Projects");
 
             migrationBuilder.DropTable(
                 name: "Organisations");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }
