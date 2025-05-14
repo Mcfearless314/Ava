@@ -10,6 +10,7 @@ public static class Dependencies
   public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
   {
     services.AddScoped<IUserRepository, UserRepository>();
+    services.AddScoped<IProjectRepository, ProjectRepository>();
 
     services.AddDbContext<AppDbContext>(options => { options.UseSqlite(connectionString); });
     return services;

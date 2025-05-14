@@ -7,27 +7,31 @@ namespace Infrastructure.Repositories;
 public class UserRepository : IUserRepository
 {
   private readonly AppDbContext _context;
+
   public UserRepository(AppDbContext context)
   {
     _context = context;
   }
   public async Task Register(string username, string passwordHash, string salt)
   {
-    var user = new User
-    {
-      Username = username,
-    };
-
-    await _context.Users.AddAsync(user);
-    await _context.SaveChangesAsync();
+    var userId = Guid.NewGuid();
 
     var credentials = new Credentials
     {
       PasswordHash = passwordHash,
       Salt = salt,
-      UserId = user.Id
+      UserId = userId
     };
 
+    var user = new User
+    {
+      Id = userId,
+      Username = username,
+      CreatedAt = DateTime.UtcNow,
+      Credentials = credentials
+    };
+
+    await _context.Users.AddAsync(user);
     await _context.Credentials.AddAsync(credentials);
     await _context.SaveChangesAsync();
   }

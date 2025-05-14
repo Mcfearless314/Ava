@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250512122208_AddedUserActionsLog")]
-    partial class AddedUserActionsLog
+    [Migration("20250514121745_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,6 +65,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("OrganisationId")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("ProjectManagerId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Subtitle")
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
@@ -78,23 +81,9 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("OrganisationId");
 
+                    b.HasIndex("ProjectManagerId");
+
                     b.ToTable("Projects");
-                });
-
-            modelBuilder.Entity("Infrastructure.Models.ProjectManager", b =>
-                {
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ProjectId", "UserId");
-
-                    b.HasIndex("ProjectId")
-                        .IsUnique();
-
-                    b.ToTable("ProjectManagers");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.ProjectTask", b =>
@@ -229,30 +218,19 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("OrganisationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("Infrastructure.Models.ProjectManager", b =>
-                {
-                    b.HasOne("Infrastructure.Models.Project", null)
-                        .WithOne("ProjectManager")
-                        .HasForeignKey("Infrastructure.Models.ProjectManager", "ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Infrastructure.Models.User", "ProjectManager")
+                        .WithMany()
+                        .HasForeignKey("ProjectManagerId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("ProjectManager");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.ProjectTask", b =>
                 {
                     b.HasOne("Infrastructure.Models.Project", null)
                         .WithMany("Tasks")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Infrastructure.Models.ProjectUser", b =>
-                {
-                    b.HasOne("Infrastructure.Models.Project", null)
-                        .WithMany("ProjectUsers")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -276,11 +254,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Infrastructure.Models.Project", b =>
                 {
-                    b.Navigation("ProjectManager")
-                        .IsRequired();
-
-                    b.Navigation("ProjectUsers");
-
                     b.Navigation("Tasks");
                 });
 
