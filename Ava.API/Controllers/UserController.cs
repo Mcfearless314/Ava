@@ -16,7 +16,7 @@ public class UserController : ControllerBase
   }
 
   [HttpPost("register")]
-  public async Task<IActionResult> Register([FromBody] LoginDto dto)
+  public async Task<IActionResult> Register([FromBody] CredentialsDto dto)
   {
     try
     {
@@ -30,12 +30,68 @@ public class UserController : ControllerBase
   }
 
   [HttpPost("login")]
-  public async Task<IActionResult> Login([FromBody] LoginDto dto)
+  public async Task<IActionResult> Login([FromBody] CredentialsDto dto)
   {
     try
     {
       await _userService.Authenticate(dto.Username, dto.Password);
       return Ok(new { Message = "User logged in successfully!" });
+    }
+    catch (Exception e)
+    {
+      return StatusCode(500, e.Message);
+    }
+  }
+
+  [HttpGet("organisation/{organisationId}")]
+  public async Task<IActionResult> GetAllUsers([FromRoute] Guid organisationId)
+  {
+    try
+    {
+      var users = await _userService.GetAllUsers(organisationId);
+      return Ok(users);
+    }
+    catch (Exception e)
+    {
+      return StatusCode(500, e.Message);
+    }
+  }
+
+  [HttpGet("project/{projectId}")]
+  public async Task<IActionResult> GetUsersByProject([FromRoute] Guid projectId)
+  {
+    try
+    {
+      var users = await _userService.GetUsersByProject(projectId);
+      return Ok(users);
+    }
+    catch (Exception e)
+    {
+      return StatusCode(500, e.Message);
+    }
+  }
+
+  [HttpPost("update/{userId}")]
+  public async Task<IActionResult> Update([FromBody] CredentialsDto dto, [FromRoute] Guid userId)
+  {
+    try
+    {
+      await _userService.UpdateUser(userId, dto.Username, dto.Password);
+      return Ok(new { Message = "User updated successfully!" });
+    }
+    catch (Exception e)
+    {
+      return StatusCode(500, e.Message);
+    }
+  }
+
+  [HttpDelete("delete/{userId}")]
+  public async Task<IActionResult> Delete([FromRoute] Guid userId)
+  {
+    try
+    {
+      await _userService.DeleteUser(userId);
+      return Ok(new { Message = "User deleted successfully!" });
     }
     catch (Exception e)
     {
