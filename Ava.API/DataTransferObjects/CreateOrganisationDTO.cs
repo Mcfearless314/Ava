@@ -1,6 +1,6 @@
-namespace Ava.API.DTOs;
+namespace Ava.API.DataTransferObjects;
 
-public class CreateOrganisationDTO
+public class CreateOrganisationDto
 {
   public string Name { get; set; }
   public Guid UserId { get; set; }

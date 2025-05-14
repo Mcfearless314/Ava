@@ -113,4 +113,33 @@ public class OrganisationRepository : IOrganizationRepository
     _context.UserRoles.Remove(userRole);
     await _context.SaveChangesAsync();
   }
+
+  public async Task AssignRoleToUser(Guid userId, Roles userRole, Guid organisationId)
+  {
+    var user = await _context.Users
+      .FirstOrDefaultAsync(u => u.Id == userId);
+    if (user == null)
+    {
+      throw new Exception("User not found");
+    }
+
+    var organisation = await _context.Organisations
+      .FirstOrDefaultAsync(o => o.Id == organisationId);
+    if (organisation == null)
+    {
+      throw new Exception("Organisation not found");
+    }
+
+    var existingUserRole = await _context.UserRoles
+      .FirstOrDefaultAsync(ur => ur.UserId == userId && ur.OrganisationId == organisationId);
+    if (existingUserRole != null)
+    {
+      existingUserRole.Role = userRole;
+      await _context.SaveChangesAsync();
+    }
+    else
+    {
+      throw new Exception("User role not found");
+    }
+  }
 }

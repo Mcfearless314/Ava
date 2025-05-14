@@ -1,4 +1,4 @@
-﻿using Ava.API.DTOs;
+﻿using Ava.API.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services.Application;
 
@@ -16,7 +16,7 @@ public class OrganisationController : ControllerBase
   }
 
   [HttpPost("create")]
-  public async Task<IActionResult> CreateOrganisation([FromBody] CreateOrganisationDTO dto)
+  public async Task<IActionResult> CreateOrganisation([FromBody] CreateOrganisationDto dto)
   {
     try
     {
@@ -30,7 +30,7 @@ public class OrganisationController : ControllerBase
   }
 
   [HttpPut("update")]
-  public async Task<IActionResult> UpdateOrganisation([FromBody] UpdateOrganisationDTO dto)
+  public async Task<IActionResult> UpdateOrganisation([FromBody] UpdateOrganisationDto dto)
   {
     try
     {
@@ -58,7 +58,7 @@ public class OrganisationController : ControllerBase
   }
 
   [HttpPost("addUser")]
-  public async Task<IActionResult> AddUserToOrganisation([FromBody] AddOrRemoveUserFromOrganisationDTO dto)
+  public async Task<IActionResult> AddUserToOrganisation([FromBody] AddOrRemoveUserFromOrganisationDto dto)
   {
     try
     {
@@ -72,11 +72,25 @@ public class OrganisationController : ControllerBase
   }
 
   [HttpDelete("removeUser")]
-  public async Task<IActionResult> RemoveUserFromOrganisation([FromBody] AddOrRemoveUserFromOrganisationDTO dto)
+  public async Task<IActionResult> RemoveUserFromOrganisation([FromBody] AddOrRemoveUserFromOrganisationDto dto)
   {
     try
     {
       await _organisationService.RemoveUserFromOrganisation(dto.UserId, dto.OrganisationId);
+      return NoContent();
+    }
+    catch (Exception e)
+    {
+      return StatusCode(500, e.Message);
+    }
+  }
+
+  [HttpPost("assignRole")]
+  public async Task<IActionResult> AssignRoleToUser([FromBody] AssignRoleToUserDto dto)
+  {
+    try
+    {
+      await _organisationService.AssignRoleToUser(dto.UserId, dto.Role, dto.OrganisationId);
       return NoContent();
     }
     catch (Exception e)

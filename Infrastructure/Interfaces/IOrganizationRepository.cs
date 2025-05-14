@@ -13,4 +13,6 @@ public interface IOrganizationRepository
   public Task AddUserToOrganisation(Guid userId, Guid organisationId);
 
   public Task RemoveUserFromOrganisation(Guid userId, Guid organisationId);
+
+  public Task AssignRoleToUser(Guid userId, Roles userRole, Guid organisationId);
 }

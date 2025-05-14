@@ -1,4 +1,4 @@
-﻿using Ava.API.DTOs;
+﻿using Ava.API.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services.Application;
 

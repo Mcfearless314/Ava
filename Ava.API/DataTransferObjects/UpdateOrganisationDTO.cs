@@ -1,6 +1,6 @@
-namespace Ava.API.DTOs;
+namespace Ava.API.DataTransferObjects;
 
-public class UpdateOrganisationDTO
+public class UpdateOrganisationDto
 {
   public Guid OrganisationId { get; set; }
   public string Name { get; set; }

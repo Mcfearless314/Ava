@@ -71,4 +71,16 @@ public class OrganisationService
       throw new Exception("Failed to remove user from organisation.", e);
     }
   }
+
+  public async Task AssignRoleToUser(Guid userId, Roles userRole, Guid organisationId)
+  {
+    try
+    {
+      await _organizationRepository.AssignRoleToUser(userId, userRole, organisationId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to assign role to user.", e);
+    }
+  }
 }
