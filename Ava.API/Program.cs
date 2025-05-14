@@ -17,6 +17,9 @@ public class Program
 
         var app = builder.Build();
 
+
+        Infrastructure.SeedData.DbSeeder.Seed(app.Services);
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

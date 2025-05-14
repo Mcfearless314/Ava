@@ -13,7 +13,6 @@ public class AppDbContext : DbContext
   public DbSet<Credentials> Credentials { get; set; }
   public DbSet<Organisation> Organisations { get; set; }
   public DbSet<Project> Projects { get; set; }
-  public DbSet<ProjectManager> ProjectManagers { get; set; }
   public DbSet<ProjectTask> ProjectTasks { get; set; }
   public DbSet<ProjectUser> ProjectUsers { get; set; }
   public DbSet<User> Users { get; set; }
@@ -67,31 +66,19 @@ public class AppDbContext : DbContext
       ent.Property(p => p.Title).IsRequired().HasMaxLength(50);
       ent.Property(p => p.Subtitle).HasMaxLength(500);
       ent.Property(p => p.Id).IsRequired();
+      ent.Property(p => p.ProjectManagerId);
 
       ent.HasMany(p => p.Tasks)
         .WithOne()
         .HasForeignKey(t => t.ProjectId)
         .OnDelete(DeleteBehavior.Cascade);
 
-      ent.HasMany(p => p.ProjectUsers)
-        .WithOne()
-        .HasForeignKey(pu => pu.ProjectId)
-        .OnDelete(DeleteBehavior.Cascade);
-
       ent.HasOne(p => p.ProjectManager)
-        .WithOne()
-        .HasForeignKey<ProjectManager>(pm => pm.ProjectId)
-        .OnDelete(DeleteBehavior.Cascade);
+        .WithMany()
+        .HasForeignKey(p => p.ProjectManagerId)
+        .OnDelete(DeleteBehavior.SetNull);
     });
 
-    // Configuration for ProjectManager entity
-    modelBuilder.Entity<ProjectManager>(ent =>
-    {
-      ent.HasKey(pm => new { pm.ProjectId, pm.UserId });
-
-      ent.Property(pm => pm.UserId).IsRequired();
-      ent.Property(pm => pm.ProjectId).IsRequired();
-    });
 
     // Configuration for ProjectTask entity
     modelBuilder.Entity<ProjectTask>(ent =>
