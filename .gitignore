@@ -47,7 +47,7 @@ Ava.API/obj
 Infrastructure/bin
 Infrastructure/obj
 
-Service/bin 
+Service/bin
 Service/obj
 
 /bin
@@ -55,4 +55,11 @@ Service/obj
 
 \obj
 \bin
+
+Ava.API/obj/Ava.API.csproj.nuget.dgspec.json
+Ava.API/obj/Ava.API.csproj.nuget.g.props
+Ava.API/obj/Ava.API.csproj.nuget.g.targets
+Ava.API/obj/project.assets.json
+Ava.API/obj/project.nuget.cache
+
 
