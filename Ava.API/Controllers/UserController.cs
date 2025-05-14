@@ -25,8 +25,7 @@ public class UserController : ControllerBase
     }
     catch (Exception e)
     {
-      Console.WriteLine(e);
-      return BadRequest(); //TODO
+      return StatusCode(500, e.Message);
     }
   }
 
@@ -40,8 +39,7 @@ public class UserController : ControllerBase
     }
     catch (Exception e)
     {
-      Console.WriteLine(e);
-      return BadRequest(); //TODO
+      return StatusCode(500, e.Message);
     }
   }
 }

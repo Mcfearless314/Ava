@@ -51,7 +51,7 @@ public class UserRepository : IUserRepository
 
   public Task<User> GetUserById(Guid userId)
   {
-    throw new NotImplementedException();
+    return _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
   }
 
   public Task<bool> GetUserByUsername(string username)
