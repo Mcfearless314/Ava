@@ -1,0 +1,87 @@
+﻿using Infrastructure.Interfaces;
+using Infrastructure.Models;
+
+namespace Service.Services.Application;
+
+public class ProjectService
+{
+  private readonly IProjectRepository _projectRepository;
+
+
+  public ProjectService(IProjectRepository projectRepository)
+  {
+    _projectRepository = projectRepository;
+  }
+
+  public async Task<Project> CreateProject(string title, string subTitle, Guid organisationId, Guid projectManagerId)
+  {
+    try
+    {
+      return await _projectRepository.CreateProject(title, subTitle, organisationId, projectManagerId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to create project.", e);
+    }
+  }
+
+  public async Task<Project> UpdateProject(Guid projectId, string title, string subTitle, Guid userId)
+  {
+    try
+    {
+      return await _projectRepository.UpdateProject(projectId, title, subTitle, userId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to update project.", e);
+    }
+  }
+
+  public async Task DeleteProject(Guid projectId, Guid userId)
+  {
+    try
+    {
+      await _projectRepository.DeleteProject(projectId, userId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to delete project.", e);
+    }
+  }
+
+  public async Task<List<ProjectTask>> GetProjectTasks(Guid projectId)
+  {
+    try
+    {
+      return await _projectRepository.GetProjectTasks(projectId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to get project tasks.", e);
+    }
+  }
+
+  public async Task<User> GetProjectManager(Guid projectId)
+  {
+    try
+    {
+      return await _projectRepository.GetProjectManager(projectId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to get project manager.", e);
+    }
+  }
+
+  public async Task RemoveUserFromProject(Guid userId, Guid projectId, Guid requesterId)
+  {
+    try
+    {
+      await _projectRepository.RemoveUserFromProject(userId, projectId, requesterId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to remove user from project.", e);
+    }
+  }
+}

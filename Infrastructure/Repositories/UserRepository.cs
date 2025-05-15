@@ -20,21 +20,24 @@ public class UserRepository : IUserRepository
 
   public async Task Register(string username, string passwordHash, string salt)
   {
-    var user = new User
-    {
-      Username = username,
-    };
-
-    await _context.Users.AddAsync(user);
-    await _context.SaveChangesAsync();
+    var userId = Guid.NewGuid();
 
     var credentials = new Credentials
     {
       PasswordHash = passwordHash,
       Salt = salt,
-      UserId = user.Id
+      UserId = userId
     };
 
+    var user = new User
+    {
+      Id = userId,
+      Username = username,
+      CreatedAt = DateTime.UtcNow,
+      Credentials = credentials
+    };
+
+    await _context.Users.AddAsync(user);
     await _context.Credentials.AddAsync(credentials);
     await _context.SaveChangesAsync();
   }
@@ -46,7 +49,13 @@ public class UserRepository : IUserRepository
 
   public Task<List<User>> GetUsersByProject(Guid projectId)
   {
-    throw new NotImplementedException();
+    var userIds = _context.ProjectUsers
+      .Where(x => x.ProjectId == projectId)
+      .Select(x => x.UserId).ToListAsync();
+
+    return _context.Users
+      .Where(x => userIds.Result.Contains(x.Id))
+      .ToListAsync();
   }
 
   public Task<User> GetUserById(Guid userId)

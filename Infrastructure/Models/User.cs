@@ -6,7 +6,7 @@ public class User
 {
     [Key]
     public Guid Id { get; set; }
-    public string Username { get; set; }
+    public required string Username { get; set; }
     public DateTime CreatedAt { get; set; }
-    public Credentials Credentials { get; set; }
+    public required Credentials Credentials { get; set; }
 }
