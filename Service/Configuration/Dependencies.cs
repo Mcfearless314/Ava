@@ -8,6 +8,7 @@ public static class Dependencies
 {
   public static IServiceCollection AddService(this IServiceCollection services)
   {
+    services.AddScoped<OrganisationService>();
     services.AddScoped<UserService>();
     services.AddScoped<ProjectService>();
 

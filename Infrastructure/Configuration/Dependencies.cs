@@ -9,6 +9,7 @@ public static class Dependencies
 {
   public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
   {
+    services.AddScoped<IOrganizationRepository, OrganisationRepository>();
     services.AddScoped<IUserRepository, UserRepository>();
     services.AddScoped<IProjectRepository, ProjectRepository>();
 
