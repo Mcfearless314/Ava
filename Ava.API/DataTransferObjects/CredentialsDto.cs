@@ -1,4 +1,4 @@
-﻿namespace Ava.API.DTOs;
+﻿namespace Ava.API.DataTransferObjects;
 
 public class CredentialsDto
 {
