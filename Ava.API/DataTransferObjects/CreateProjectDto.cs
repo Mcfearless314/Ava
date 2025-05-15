@@ -1,9 +1,9 @@
-﻿namespace Ava.API.DTOs;
+﻿namespace Ava.API.DataTransferObjects;
 
 public class CreateProjectDto
 {
-  public string Title { get; set; }
-  public string SubTitle { get; set; }
+  public required string Title { get; set; }
+  public string? SubTitle { get; set; }
   public Guid OrganisationId { get; set; }
   public Guid ProjectManagerId { get; set; }
 }
