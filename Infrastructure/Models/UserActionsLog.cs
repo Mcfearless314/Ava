@@ -12,7 +12,7 @@ public class UserActionsLog
   public required DateTime ActionPerformedAt { get; set; }
   public required Guid ActionUser { get; set; }
   public Guid? TargetUser { get; set; }
-  public Guid? TaskId { get; set; }
+  public Guid? ProjectTaskId { get; set; }
   public Guid? ProjectId { get; set; }
   public Guid? OrganisationId { get; set; }
 }
@@ -27,10 +27,10 @@ public enum UserActions
   RemoveUserFromProject = 5,
 
   // Tasks
-  CreateTask = 6,
-  UpdateTask = 7,
-  DeleteTask = 8,
-  UpdateTaskStatus = 9,
+  CreateProjectTask = 6,
+  UpdateProjectTask = 7,
+  DeleteProjectTask = 8,
+  UpdateProjectTaskStatus = 9,
 
   // Organisation
   AddUserToOrganisation = 10,
