@@ -6,7 +6,7 @@ public interface IUserRepository
 {
   public Task Register(string username, string passwordHash, string salt);
 
-  public Task<List<User>> GetAllUsers(Guid organisationId);
+  public Task<List<UserRole>> GetAllUsersWithRoles(Guid organisationId);
 
   public Task<List<User>> GetUsersByProject(Guid projectId);
 

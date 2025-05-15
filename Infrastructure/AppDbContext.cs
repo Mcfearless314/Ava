@@ -139,6 +139,11 @@ public class AppDbContext : DbContext
       ent.Property(ur => ur.UserId).IsRequired();
       ent.Property(ur => ur.OrganisationId).IsRequired();
       ent.Property(ur => ur.Role).IsRequired();
+
+      ent.HasOne<User>(ur => ur.User)
+        .WithMany()
+        .HasForeignKey(ur => ur.UserId)
+        .OnDelete(DeleteBehavior.Cascade);
     });
   }
 }

@@ -63,11 +63,11 @@ public class UserService
     }
   }
 
-  public async Task<List<User>> GetAllUsers(Guid organisationId)
+  public async Task<List<UserRole>> GetAllUsers(Guid organisationId)
   {
     try
     {
-      return await _userRepository.GetAllUsers(organisationId);
+      return await _userRepository.GetAllUsersWithRoles(organisationId);
     }
     catch (Exception e)
     {

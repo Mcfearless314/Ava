@@ -21,7 +21,7 @@ public class UserController : ControllerBase
     try
     {
       await _userService.Register(dto.Username, dto.Password);
-      return Ok(new { Message = "User registered successfully!" });
+      return Ok(new { Message = $"{dto.Username} registered successfully!" });
     }
     catch (Exception e)
     {
@@ -35,7 +35,7 @@ public class UserController : ControllerBase
     try
     {
       await _userService.Authenticate(dto.Username, dto.Password);
-      return Ok(new { Message = "User logged in successfully!" });
+      return Ok(new { Message = $"{dto.Username} logged in successfully!" });
     }
     catch (Exception e)
     {
@@ -44,12 +44,20 @@ public class UserController : ControllerBase
   }
 
   [HttpGet("organisation/{organisationId}")]
-  public async Task<IActionResult> GetAllUsers([FromRoute] Guid organisationId)
+  public async Task<ActionResult<List<UserRoleDto>>> GetUsers(Guid organisationId)
   {
     try
     {
-      var users = await _userService.GetAllUsers(organisationId);
-      return Ok(users);
+      var userRoles = await _userService.GetAllUsers(organisationId);
+
+      var dtos = userRoles.Select(ur => new UserRoleDto
+      {
+        UserId = ur.UserId,
+        Username = ur.User.Username,
+        Role = ur.Role
+      }).ToList();
+
+      return Ok(dtos);
     }
     catch (Exception e)
     {
@@ -63,7 +71,14 @@ public class UserController : ControllerBase
     try
     {
       var users = await _userService.GetUsersByProject(projectId);
-      return Ok(users);
+
+      var userDtos = users.Select(u => new UserDto
+      {
+        Id = u.Id,
+        Username = u.Username
+      }).ToList();
+
+      return Ok(userDtos);
     }
     catch (Exception e)
     {

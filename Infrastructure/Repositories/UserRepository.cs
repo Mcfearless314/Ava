@@ -36,9 +36,12 @@ public class UserRepository : IUserRepository
     await _context.SaveChangesAsync();
   }
 
-  public async Task<List<User>> GetAllUsers(Guid organisationId)
+  public async Task<List<UserRole>> GetAllUsersWithRoles(Guid organisationId)
   {
-    throw new NotImplementedException(); // Add user to userrole for this implementation
+    return await _context.UserRoles
+      .Where(ur => ur.OrganisationId == organisationId)
+      .Include(ur => ur.User)
+      .ToListAsync();
   }
 
   public async Task<List<User>> GetUsersByProject(Guid projectId)
