@@ -49,7 +49,7 @@ public class OrganisationController : ControllerBase
     try
     {
       await _organisationService.DeleteOrganisation(organisationId);
-      return NoContent();
+      return Ok("Organisation deleted successfully!");
     }
     catch (Exception e)
     {
@@ -62,8 +62,7 @@ public class OrganisationController : ControllerBase
   {
     try
     {
-      await _organisationService.AddUserToOrganisation(dto.UserId, dto.OrganisationId);
-      return NoContent();
+      return Ok(await _organisationService.AddUserToOrganisation(dto.UserId, dto.OrganisationId));
     }
     catch (Exception e)
     {
@@ -76,22 +75,7 @@ public class OrganisationController : ControllerBase
   {
     try
     {
-      await _organisationService.RemoveUserFromOrganisation(dto.UserId, dto.OrganisationId);
-      return NoContent();
-    }
-    catch (Exception e)
-    {
-      return StatusCode(500, e.Message);
-    }
-  }
-
-  [HttpPost("assignRole")]
-  public async Task<IActionResult> AssignRoleToUser([FromBody] AssignRoleToUserDto dto)
-  {
-    try
-    {
-      await _organisationService.AssignRoleToUser(dto.UserId, dto.Role, dto.OrganisationId);
-      return NoContent();
+      return Ok(await _organisationService.RemoveUserFromOrganisation(dto.UserId, dto.OrganisationId));
     }
     catch (Exception e)
     {

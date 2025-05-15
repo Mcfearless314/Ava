@@ -48,11 +48,12 @@ public class OrganisationService
     }
   }
 
-  public async Task AddUserToOrganisation(Guid userId, Guid organisationId)
+  public async Task<string> AddUserToOrganisation(Guid userId, Guid organisationId)
   {
     try
     {
-      await _organizationRepository.AddUserToOrganisation(userId, organisationId);
+      var response = await _organizationRepository.AddUserToOrganisation(userId, organisationId);
+      return $"User {response[0]} has been added to organisation {response[1]}";
     }
     catch (Exception e)
     {
@@ -60,27 +61,16 @@ public class OrganisationService
     }
   }
 
-  public async Task RemoveUserFromOrganisation(Guid userId, Guid organisationId)
+  public async Task<string> RemoveUserFromOrganisation(Guid userId, Guid organisationId)
   {
     try
     {
-      await _organizationRepository.RemoveUserFromOrganisation(userId, organisationId);
+      var response = await _organizationRepository.RemoveUserFromOrganisation(userId, organisationId);
+      return $"User {response[0]} has been removed from organisation {response[1]}";
     }
     catch (Exception e)
     {
       throw new Exception("Failed to remove user from organisation.", e);
-    }
-  }
-
-  public async Task AssignRoleToUser(Guid userId, Roles userRole, Guid organisationId)
-  {
-    try
-    {
-      await _organizationRepository.AssignRoleToUser(userId, userRole, organisationId);
-    }
-    catch (Exception e)
-    {
-      throw new Exception("Failed to assign role to user.", e);
     }
   }
 }

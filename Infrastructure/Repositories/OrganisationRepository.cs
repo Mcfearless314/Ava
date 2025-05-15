@@ -18,6 +18,7 @@ public class OrganisationRepository : IOrganizationRepository
     var organisation = new Organisation
     {
       Name = name,
+      Id = Guid.NewGuid()
     };
 
     var userRole = new UserRole
@@ -60,7 +61,7 @@ public class OrganisationRepository : IOrganizationRepository
     await _context.SaveChangesAsync();
   }
 
-  public async Task AddUserToOrganisation(Guid userId, Guid organisationId)
+  public async Task<string[]> AddUserToOrganisation(Guid userId, Guid organisationId)
   {
     var user = await _context.Users
       .FirstOrDefaultAsync(u => u.Id == userId);
@@ -85,9 +86,10 @@ public class OrganisationRepository : IOrganizationRepository
 
     await _context.UserRoles.AddAsync(userRole);
     await _context.SaveChangesAsync();
+    return [user.Username, organisation.Name];
   }
 
-  public async Task RemoveUserFromOrganisation(Guid userId, Guid organisationId)
+  public async Task<string[]> RemoveUserFromOrganisation(Guid userId, Guid organisationId)
   {
     var user = await _context.Users
       .FirstOrDefaultAsync(u => u.Id == userId);
@@ -112,34 +114,6 @@ public class OrganisationRepository : IOrganizationRepository
 
     _context.UserRoles.Remove(userRole);
     await _context.SaveChangesAsync();
-  }
-
-  public async Task AssignRoleToUser(Guid userId, Roles userRole, Guid organisationId)
-  {
-    var user = await _context.Users
-      .FirstOrDefaultAsync(u => u.Id == userId);
-    if (user == null)
-    {
-      throw new Exception("User not found");
-    }
-
-    var organisation = await _context.Organisations
-      .FirstOrDefaultAsync(o => o.Id == organisationId);
-    if (organisation == null)
-    {
-      throw new Exception("Organisation not found");
-    }
-
-    var existingUserRole = await _context.UserRoles
-      .FirstOrDefaultAsync(ur => ur.UserId == userId && ur.OrganisationId == organisationId);
-    if (existingUserRole != null)
-    {
-      existingUserRole.Role = userRole;
-      await _context.SaveChangesAsync();
-    }
-    else
-    {
-      throw new Exception("User role not found");
-    }
+    return [user.Username, organisation.Name];
   }
 }
