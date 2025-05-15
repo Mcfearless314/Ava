@@ -43,9 +43,9 @@ public class UserService
     {
       var userWithCredentials = await _userRepository.GetUserWithCredentialsByUsername(username);
 
-      if (userWithCredentials == null || userWithCredentials.Credentials == null)
+      if (userWithCredentials == null)
       {
-        throw new Exception("User or credentials not found.");
+        throw new Exception("Invalid username or password.");
       }
 
       var credentials = userWithCredentials.Credentials;
@@ -60,6 +60,76 @@ public class UserService
     catch (Exception e)
     {
       throw new Exception("Authentication failed.", e);
+    }
+  }
+
+  public async Task<List<UserRole>> GetAllUsers(Guid organisationId)
+  {
+    try
+    {
+      return await _userRepository.GetAllUsersWithRoles(organisationId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to get users by organisation.", e);
+    }
+  }
+
+  public async Task<List<User>> GetUsersByProject(Guid projectId)
+  {
+    try
+    {
+      return await _userRepository.GetUsersByProject(projectId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to get users by project.", e);
+    }
+  }
+
+  public async Task<User> UpdateUser(Guid userId, string username, string password)
+  {
+    try
+    {
+      var existingUser = await _userRepository.GetUserById(userId);
+
+      if (existingUser == null)
+      {
+        throw new Exception("User not found.");
+      }
+
+      var salt = _passwordHashAlgorithm.GenerateSalt();
+      var passwordHash = _passwordHashAlgorithm.HashPassword(password, salt);
+
+
+      var updatedUser = new User
+      {
+        Id = userId,
+        Username = username,
+        Credentials = new Credentials
+        {
+          PasswordHash = passwordHash,
+          Salt = salt,
+        }
+      };
+
+      return await _userRepository.UpdateUser(updatedUser);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Update failed.", e);
+    }
+  }
+
+  public async Task DeleteUser(Guid userId)
+  {
+    try
+    {
+      await _userRepository.DeleteUser(userId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Delete failed.", e);
     }
   }
 }

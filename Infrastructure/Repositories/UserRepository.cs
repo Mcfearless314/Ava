@@ -12,12 +12,6 @@ public class UserRepository : IUserRepository
   {
     _context = context;
   }
-
-  public Task Login(string username, string password)
-  {
-    throw new NotImplementedException();
-  }
-
   public async Task Register(string username, string passwordHash, string salt)
   {
     var userId = Guid.NewGuid();
@@ -42,52 +36,70 @@ public class UserRepository : IUserRepository
     await _context.SaveChangesAsync();
   }
 
-  public Task<List<User>> GetAllUsers(Guid organisationId)
+  public async Task<List<UserRole>> GetAllUsersWithRoles(Guid organisationId)
   {
-    throw new NotImplementedException();
-  }
-
-  public Task<List<User>> GetUsersByProject(Guid projectId)
-  {
-    var userIds = _context.ProjectUsers
-      .Where(x => x.ProjectId == projectId)
-      .Select(x => x.UserId).ToListAsync();
-
-    return _context.Users
-      .Where(x => userIds.Result.Contains(x.Id))
+    return await _context.UserRoles
+      .Where(ur => ur.OrganisationId == organisationId)
+      .Include(ur => ur.User)
       .ToListAsync();
   }
 
-  public Task<User> GetUserById(Guid userId)
+  public async Task<List<User>> GetUsersByProject(Guid projectId)
   {
-    return _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+    var userIds = await _context.ProjectUsers
+      .Where(pu => pu.ProjectId.ToString() == projectId.ToString())
+      .Select(pu => pu.UserId)
+      .ToListAsync();
+
+    if(!userIds.Any()) throw new KeyNotFoundException();
+
+    return await _context.Users
+      .Where(u => userIds.Contains(u.Id))
+      .ToListAsync();
   }
 
-  public Task<bool> GetUserByUsername(string username)
+  public async Task<User> GetUserById(Guid userId)
   {
-    return _context.Users
+    var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+    if(user == null) throw new KeyNotFoundException();
+    return user;
+  }
+
+  public async Task<bool> GetUserByUsername(string username)
+  {
+    return await _context.Users
       .AnyAsync(u => u.Username == username);
   }
 
-  public Task<User?> GetUserWithCredentialsByUsername(string username)
+  public async Task<User?> GetUserWithCredentialsByUsername(string username)
   {
-    return _context.Users
+    return await _context.Users
       .Include(u => u.Credentials)
       .FirstOrDefaultAsync(u => u.Username == username);
   }
 
-  public Task<User> UpdateUser(User user)
+  public async Task<User> UpdateUser(User user)
   {
-    throw new NotImplementedException();
+    var existingUser = await _context.Users
+      .Include(u => u.Credentials)
+      .FirstOrDefaultAsync(u => u.Id == user.Id);
+
+    if(existingUser == null) throw new KeyNotFoundException();
+
+    existingUser.Username = user.Username;
+    existingUser.Credentials.PasswordHash = user.Credentials.PasswordHash;
+    existingUser.Credentials.Salt = user.Credentials.Salt;
+
+    await _context.SaveChangesAsync();
+
+    return existingUser;
   }
 
   public Task DeleteUser(Guid userId)
   {
-    throw new NotImplementedException();
-  }
-
-  public Task AssignRoleToUser(Guid userId, Roles userRole, Guid organisationId)
-  {
-    throw new NotImplementedException();
+    var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+    if(user == null) throw new KeyNotFoundException();
+    _context.Users.Remove(user);
+    return _context.SaveChangesAsync();
   }
 }
