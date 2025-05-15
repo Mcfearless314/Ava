@@ -4,18 +4,19 @@ namespace Infrastructure.Models;
 
 public class ProjectTask
 {
-    [Key]
-    public int Id { get; set; }
-
+    public string Id { get; set; } = null!;
     public string Title { get; set; } = null!;
     public string? Body { get; set; }
     public DateTime CreatedAt { get; set; }
-    public TaskStatus Status { get; set; }
+    public ProjectTaskStatus Status { get; set; }
 
     public Guid ProjectId { get; set; }
+
+    public Project Project { get; set; } = null!;
+
 }
 
-public enum TaskStatus
+public enum ProjectTaskStatus
 {
     ToDo = 1,
     InProgress = 2,

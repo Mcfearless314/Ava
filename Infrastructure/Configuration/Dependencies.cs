@@ -12,6 +12,7 @@ public static class Dependencies
     services.AddScoped<IOrganizationRepository, OrganisationRepository>();
     services.AddScoped<IUserRepository, UserRepository>();
     services.AddScoped<IProjectRepository, ProjectRepository>();
+    services.AddScoped<IProjectTaskRepository, ProjectTaskRepository>();
 
     services.AddDbContext<AppDbContext>(options => { options.UseSqlite(connectionString); });
     return services;

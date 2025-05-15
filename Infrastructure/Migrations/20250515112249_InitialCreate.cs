@@ -45,7 +45,7 @@ namespace Infrastructure.Migrations
                     ActionPerformedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ActionUser = table.Column<Guid>(type: "TEXT", nullable: false),
                     TargetUser = table.Column<Guid>(type: "TEXT", nullable: true),
-                    TaskId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    ProjectTaskId = table.Column<Guid>(type: "TEXT", nullable: true),
                     ProjectId = table.Column<Guid>(type: "TEXT", nullable: true),
                     OrganisationId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
@@ -142,17 +142,16 @@ namespace Infrastructure.Migrations
                 name: "ProjectTasks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<string>(type: "TEXT", maxLength: 4, nullable: false),
+                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     Body = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Status = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectTasks", x => x.Id);
+                    table.PrimaryKey("PK_ProjectTasks", x => new { x.ProjectId, x.Id });
                     table.ForeignKey(
                         name: "FK_ProjectTasks_Projects_ProjectId",
                         column: x => x.ProjectId,
@@ -170,11 +169,6 @@ namespace Infrastructure.Migrations
                 name: "IX_Projects_ProjectManagerId",
                 table: "Projects",
                 column: "ProjectManagerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectTasks_ProjectId",
-                table: "ProjectTasks",
-                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_UserId",
