@@ -83,7 +83,16 @@ public class AppDbContext : DbContext
     // Configuration for ProjectTask entity
     modelBuilder.Entity<ProjectTask>(ent =>
     {
-      ent.HasKey(pt => pt.Id);
+      ent.HasKey(pt => new { pt.ProjectId, pt.Id });
+
+      ent.Property(pt => pt.Id)
+        .IsRequired()
+        .HasMaxLength(4);
+
+      ent.HasOne(pt => pt.Project)
+        .WithMany(p => p.Tasks)
+        .HasForeignKey(pt => pt.ProjectId)
+        .OnDelete(DeleteBehavior.Cascade);
 
       ent.Property(pt => pt.Status).IsRequired();
       ent.Property(pt => pt.CreatedAt).IsRequired();
