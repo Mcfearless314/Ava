@@ -1,5 +1,6 @@
 ﻿using Ava.API.DataTransferObjects;
 using Infrastructure.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services.Application;
 
@@ -7,6 +8,7 @@ namespace Ava.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class ProjectTaskController : ControllerBase
 {
   private readonly ProjectTaskService _projectTaskService;

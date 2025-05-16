@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using Ava.API.Configuration;
 using Infrastructure.Configuration;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Service.Configuration;
 using Service.Services.Security;
 
@@ -19,7 +21,6 @@ public class Program
         builder.Configuration.AddEnvironmentVariables(prefix:"AVA_");
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
         builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DBConnection"));
         builder.Services.AddService();
 
@@ -33,6 +34,7 @@ public class Program
           {
             options.TokenValidationParameters = new TokenValidationParameters
             {
+              NameClaimType = ClaimTypes.NameIdentifier,
               ValidateIssuer = true,
               ValidateAudience = true,
               ValidateLifetime = true,
@@ -42,6 +44,36 @@ public class Program
             };
           });
 
+        builder.Services.AddSwaggerGen(c =>
+        {
+          c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+          {
+            In = ParameterLocation.Header,
+            Description = "Please insert JWT with Bearer into field",
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "Bearer",
+            BearerFormat = "JWT"
+          });
+          c.AddSecurityRequirement(new OpenApiSecurityRequirement
+          {
+            {
+              new OpenApiSecurityScheme
+              {
+                Reference = new OpenApiReference
+                {
+                  Type = ReferenceType.SecurityScheme, Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
+              },
+              new string[]
+              {
+              }
+            }
+          });
+        });
 
         var app = builder.Build();
 
@@ -56,6 +88,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();
