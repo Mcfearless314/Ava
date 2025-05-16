@@ -1,5 +1,6 @@
 ﻿using Ava.API.DataTransferObjects;
 using Infrastructure.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services.Application;
 
@@ -16,6 +17,7 @@ public class ProjectTaskController : ControllerBase
     _projectTaskService = projectTaskService;
   }
 
+  [Authorize(Policy = "MustBeProjectManager")]
   [HttpPost("create")]
   public async Task<IActionResult> CreateProjectTask([FromBody] CreateOrUpdateProjectTaskDto dto)
   {
@@ -30,6 +32,7 @@ public class ProjectTaskController : ControllerBase
     }
   }
 
+  [Authorize(Policy = "MustBeProjectManager")]
   [HttpPut("update/{projectTaskId}")]
   public async Task<IActionResult> UpdateProjectTask(string projectTaskId, [FromBody] CreateOrUpdateProjectTaskDto dto)
   {
@@ -46,6 +49,7 @@ public class ProjectTaskController : ControllerBase
     }
   }
 
+  [Authorize(Policy = "MustBeProjectManager")]
   [HttpDelete("delete/{projectTaskId}/{projectId:guid}")]
   public async Task<IActionResult> DeleteProjectTask(string projectTaskId, Guid projectId)
   {
@@ -61,6 +65,7 @@ public class ProjectTaskController : ControllerBase
       return StatusCode(500, e.Message);
     }
   }
+
 
   [HttpGet("get/{projectTaskId}/{projectId:guid}")]
   public async Task<IActionResult> GetProjectTask(string projectTaskId, Guid projectId)
