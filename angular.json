@@ -63,7 +63,8 @@
               "browserTarget": "Ava:build:production"
             },
             "development": {
-              "browserTarget": "Ava:build:development"
+              "browserTarget": "Ava:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
