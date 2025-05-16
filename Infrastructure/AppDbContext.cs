@@ -86,11 +86,6 @@ public class AppDbContext : DbContext
         .IsRequired()
         .HasMaxLength(4);
 
-      ent.HasOne(pt => pt.Project)
-        .WithMany(p => p.Tasks)
-        .HasForeignKey(pt => pt.ProjectId)
-        .OnDelete(DeleteBehavior.Cascade);
-
       ent.Property(pt => pt.Status).IsRequired();
       ent.Property(pt => pt.CreatedAt).IsRequired();
       ent.Property(pt => pt.Title).IsRequired().HasMaxLength(50);
