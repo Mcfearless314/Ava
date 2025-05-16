@@ -166,45 +166,6 @@ public static class DbSeeder
 
       context.UserRoles.AddRange(userRoles);
     }
-
-    if (!context.Projects.Any())
-    {
-      var project = new Project
-      {
-        Id = Guid.Parse("77777777-7777-7777-7777-777777777777"),
-        Title = "Test project",
-        Subtitle = "This is a test project.",
-        OrganisationId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-        ProjectManagerId = Guid.Parse("22222222-2222-2222-2222-222222222222")
-      };
-
-      context.Projects.Add(project);
-    }
-
-    if (!context.ProjectUsers.Any())
-    {
-      var projectUsers = new List<ProjectUser>
-      {
-        new()
-        {
-          ProjectId = Guid.Parse("77777777-7777-7777-7777-777777777777"),
-          UserId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
-        },
-        new()
-        {
-          ProjectId = Guid.Parse("77777777-7777-7777-7777-777777777777"),
-          UserId = Guid.Parse("44444444-4444-4444-4444-444444444444"),
-        },
-        new()
-        {
-          ProjectId = Guid.Parse("77777777-7777-7777-7777-777777777777"),
-          UserId = Guid.Parse("55555555-5555-5555-5555-555555555555"),
-        }
-      };
-
-      context.ProjectUsers.AddRange(projectUsers);
-    }
-
     context.SaveChanges();
   }
 }
