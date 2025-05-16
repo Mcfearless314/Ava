@@ -22,21 +22,20 @@ public class ProjectRepository : IProjectRepository
       Title = title,
       Subtitle = subTitle,
       OrganisationId = organisationId,
-      ProjectManagerId = projectManagerId
+      ProjectUsers = new List<ProjectUser>
+      {
+        new ()
+        {
+          UserId = projectManagerId,
+          Role = ProjectRoles.ProjectManager,
+          ProjectId = Guid.NewGuid()
+        }
+      }
     };
 
-    var exists = _context.Users.Any(u => u.Id == project.ProjectManagerId);
-
-    if (exists)
-    {
       await _context.Projects.AddAsync(project);
       await _context.SaveChangesAsync();
       return project;
-    }
-    else
-    {
-      throw new Exception("Project manager not found");
-    }
   }
 
   public async Task<Project> UpdateProject(Guid projectId, string title, string subTitle, Guid userId)
@@ -79,8 +78,11 @@ public class ProjectRepository : IProjectRepository
 
     if (project == null) throw new Exception("Project not found");
 
+    var projectUser = await _context.ProjectUsers
+      .FirstOrDefaultAsync(pu => pu.ProjectId == projectId && pu.Role == ProjectRoles.ProjectManager);
+
     var projectManager = await _context.Users
-      .FirstOrDefaultAsync(u => u.Id == project.ProjectManagerId);
+      .FirstOrDefaultAsync(u => u.Id == projectUser.UserId);
 
     if (projectManager == null) throw new Exception("Project manager not found");
 

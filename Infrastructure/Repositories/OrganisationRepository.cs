@@ -18,17 +18,10 @@ public class OrganisationRepository : IOrganizationRepository
     var organisation = new Organisation
     {
       Name = name,
-      Id = Guid.NewGuid()
+      Id = Guid.NewGuid(),
+      AdminUserId = userId,
     };
 
-    var userRole = new UserRole
-    {
-      UserId = userId,
-      OrganisationId = organisation.Id,
-      Role = Roles.Admin
-    };
-
-    await _context.UserRoles.AddAsync(userRole);
     await _context.Organisations.AddAsync(organisation);
     await _context.SaveChangesAsync();
     return organisation;
@@ -77,14 +70,7 @@ public class OrganisationRepository : IOrganizationRepository
       throw new Exception("Organisation not found");
     }
 
-    var userRole = new UserRole
-    {
-      UserId = userId,
-      OrganisationId = organisationId,
-      Role = Roles.User
-    };
-
-    await _context.UserRoles.AddAsync(userRole);
+    user.OrganisationId = organisationId;
     await _context.SaveChangesAsync();
     return [user.Username, organisation.Name];
   }
@@ -105,14 +91,8 @@ public class OrganisationRepository : IOrganizationRepository
       throw new Exception("Organisation not found");
     }
 
-    var userRole = await _context.UserRoles
-      .FirstOrDefaultAsync(ur => ur.UserId == userId && ur.OrganisationId == organisationId);
-    if (userRole == null)
-    {
-      throw new Exception("User is not part of the organisation");
-    }
+    user.OrganisationId = Guid.Empty;
 
-    _context.UserRoles.Remove(userRole);
     await _context.SaveChangesAsync();
     return [user.Username, organisation.Name];
   }

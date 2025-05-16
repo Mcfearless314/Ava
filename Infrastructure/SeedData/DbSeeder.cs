@@ -117,7 +117,6 @@ public static class DbSeeder
           Title = "Test Project",
           Subtitle = "This is a test project.",
           OrganisationId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-          ProjectManagerId = Guid.Parse("55555555-5555-5555-5555-555555555555"),
         },
         new()
         {
@@ -125,7 +124,6 @@ public static class DbSeeder
           Title = "Another Test Project",
           Subtitle = "This is another test project.",
           OrganisationId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-          ProjectManagerId = Guid.Parse("66666666-6666-6666-6666-666666666666"),
         }
       };
       context.Projects.AddRange(projects);
@@ -139,55 +137,29 @@ public static class DbSeeder
         {
           ProjectId = Guid.Parse("88888888-8888-8888-8888-888888888888"),
           UserId = Guid.Parse("55555555-5555-5555-5555-555555555555"),
+          Role = ProjectRoles.ProjectManager,
         },
         new()
         {
           ProjectId = Guid.Parse("99999999-9999-9999-9999-999999999999"),
           UserId = Guid.Parse("66666666-6666-6666-6666-666666666666"),
+          Role = ProjectRoles.ProjectManager,
+        },
+        new()
+        {
+          ProjectId = Guid.Parse("88888888-8888-8888-8888-888888888888"),
+          UserId = Guid.Parse("44444444-4444-4444-4444-444444444444"),
+          Role = ProjectRoles.Contributer,
+        },
+        new()
+        {
+          ProjectId = Guid.Parse("99999999-9999-9999-9999-999999999999"),
+          UserId = Guid.Parse("77777777-7777-7777-7777-777777777777"),
+          Role = ProjectRoles.Contributer,
         },
       };
 
       context.ProjectUsers.AddRange(projectUsers);
-    }
-
-    if (!context.UserRoles.Any())
-    {
-      var userRoles = new List<UserRole>
-      {
-        new UserRole
-        {
-          OrganisationId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-          UserId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
-          Role = Roles.Admin
-        },
-
-        new UserRole
-        {
-          OrganisationId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-          UserId = Guid.Parse("44444444-4444-4444-4444-444444444444"),
-          Role = Roles.Admin
-        },
-        new UserRole
-        {
-          OrganisationId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-          UserId = Guid.Parse("55555555-5555-5555-5555-555555555555"),
-          Role = Roles.User
-        },
-        new UserRole
-        {
-          OrganisationId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-          UserId = Guid.Parse("66666666-6666-6666-6666-666666666666"),
-          Role = Roles.User
-        },
-        new UserRole
-        {
-          OrganisationId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-          UserId = Guid.Parse("77777777-7777-7777-7777-777777777777"),
-          Role = Roles.User
-        }
-      };
-
-      context.UserRoles.AddRange(userRoles);
     }
 
     if (!context.ProjectTasks.Any())
