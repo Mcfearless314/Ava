@@ -31,37 +31,35 @@ public class UserService
 
       await _userRepository.Register(username, passwordHash, salt);
     }
-    catch (Exception e)
+    catch (Exception ex)
     {
-      throw new Exception("Registration failed.", e);
+      if (ex.Message == "User already exists.")
+      {
+        throw;
+      }
+      throw new Exception("Registration failed.", ex);
     }
   }
 
   public async Task<User> Authenticate(string username, string password)
   {
-    try
+    var userWithCredentials = await _userRepository.GetUserWithCredentialsByUsername(username);
+
+    if (userWithCredentials == null || userWithCredentials.Credentials == null)
     {
-      var userWithCredentials = await _userRepository.GetUserWithCredentialsByUsername(username);
-
-      if (userWithCredentials == null)
-      {
-        throw new Exception("Invalid username or password.");
-      }
-
-      var credentials = userWithCredentials.Credentials;
-
-      if (_passwordHashAlgorithm.VerifyHashedPassword(username, password, credentials.PasswordHash, credentials.Salt))
-      {
-        return await _userRepository.GetUserById(credentials.UserId);
-      }
-
       throw new Exception("Invalid username or password.");
     }
-    catch (Exception e)
+
+    var credentials = userWithCredentials.Credentials;
+
+    if (!_passwordHashAlgorithm.VerifyHashedPassword(username, password, credentials.PasswordHash, credentials.Salt))
     {
-      throw new Exception("Authentication failed.", e);
+      throw new Exception("Invalid username or password.");
     }
+
+    return await _userRepository.GetUserById(credentials.UserId);
   }
+
 
   public async Task<List<UserRole>> GetAllUsers(Guid organisationId)
   {
