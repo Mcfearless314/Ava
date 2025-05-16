@@ -1,6 +1,11 @@
-﻿using Ava.API.DataTransferObjects;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Ava.API.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services.Application;
+using Service.Services.Security;
 
 namespace Ava.API.Controllers;
 
@@ -9,10 +14,12 @@ namespace Ava.API.Controllers;
 public class UserController : ControllerBase
 {
   private readonly UserService _userService;
+  private readonly JwtTokenService _jwtTokenService;
 
-  public UserController(UserService userService)
+  public UserController(UserService userService, JwtTokenService jwtTokenService)
   {
     _userService = userService;
+    _jwtTokenService = jwtTokenService;
   }
 
   [HttpPost("register")]
@@ -34,8 +41,13 @@ public class UserController : ControllerBase
   {
     try
     {
-      await _userService.Authenticate(dto.Username, dto.Password);
-      return Ok(new { Message = $"{dto.Username} logged in successfully!" });
+      var user = await _userService.Authenticate(dto.Username, dto.Password);
+      var token = _jwtTokenService.GenerateJwtToken(dto.Username, user.Id);
+      return Ok(new
+      {
+        Message = $"{dto.Username} logged in successfully!",
+        Token = token
+      });
     }
     catch (Exception e)
     {
