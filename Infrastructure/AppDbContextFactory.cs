@@ -11,7 +11,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
   {
     var config = new ConfigurationBuilder()
       .SetBasePath(Directory.GetCurrentDirectory())
-      .AddEnvironmentVariables()
+      .AddEnvironmentVariables(prefix: "AVA_")
       .Build();
 
     var connectionString = config.GetConnectionString("DBConnection");

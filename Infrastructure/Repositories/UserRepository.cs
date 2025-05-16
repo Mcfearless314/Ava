@@ -36,11 +36,10 @@ public class UserRepository : IUserRepository
     await _context.SaveChangesAsync();
   }
 
-  public async Task<List<UserRole>> GetAllUsersWithRoles(Guid organisationId)
+  public async Task<List<User>> GetAllUsers(Guid organisationId)
   {
-    return await _context.UserRoles
+    return await _context.Users
       .Where(ur => ur.OrganisationId == organisationId)
-      .Include(ur => ur.User)
       .ToListAsync();
   }
 
@@ -78,17 +77,17 @@ public class UserRepository : IUserRepository
       .FirstOrDefaultAsync(u => u.Username == username);
   }
 
-  public async Task<User> UpdateUser(User user)
+  public async Task<User> UpdateUser(Guid userId, string username, string salt, string passwordHash)
   {
     var existingUser = await _context.Users
       .Include(u => u.Credentials)
-      .FirstOrDefaultAsync(u => u.Id == user.Id);
+      .FirstOrDefaultAsync(u => u.Id == userId);
 
     if(existingUser == null) throw new KeyNotFoundException();
 
-    existingUser.Username = user.Username;
-    existingUser.Credentials.PasswordHash = user.Credentials.PasswordHash;
-    existingUser.Credentials.Salt = user.Credentials.Salt;
+    existingUser.Username = username;
+    existingUser.Credentials.PasswordHash = passwordHash;
+    existingUser.Credentials.Salt = salt;
 
     await _context.SaveChangesAsync();
 

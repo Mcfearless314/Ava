@@ -56,17 +56,16 @@ public class UserController : ControllerBase
   }
 
   [HttpGet("organisation/{organisationId}")]
-  public async Task<ActionResult<List<UserRoleDto>>> GetUsers(Guid organisationId)
+  public async Task<ActionResult<List<UserDto>>> GetUsers(Guid organisationId)
   {
     try
     {
-      var userRoles = await _userService.GetAllUsers(organisationId);
+      var users = await _userService.GetAllUsers(organisationId);
 
-      var dtos = userRoles.Select(ur => new UserRoleDto
+      var dtos = users.Select(ur => new UserDto
       {
-        UserId = ur.UserId,
-        Username = ur.User.Username,
-        Role = ur.Role
+        Id = ur.Id,
+        Username = ur.Username,
       }).ToList();
 
       return Ok(dtos);

@@ -61,11 +61,11 @@ public class UserService
   }
 
 
-  public async Task<List<UserRole>> GetAllUsers(Guid organisationId)
+  public async Task<List<User>> GetAllUsers(Guid organisationId)
   {
     try
     {
-      return await _userRepository.GetAllUsersWithRoles(organisationId);
+      return await _userRepository.GetAllUsers(organisationId);
     }
     catch (Exception e)
     {
@@ -99,19 +99,7 @@ public class UserService
       var salt = _passwordHashAlgorithm.GenerateSalt();
       var passwordHash = _passwordHashAlgorithm.HashPassword(password, salt);
 
-
-      var updatedUser = new User
-      {
-        Id = userId,
-        Username = username,
-        Credentials = new Credentials
-        {
-          PasswordHash = passwordHash,
-          Salt = salt,
-        }
-      };
-
-      return await _userRepository.UpdateUser(updatedUser);
+      return await _userRepository.UpdateUser(userId, username, salt, passwordHash);
     }
     catch (Exception e)
     {

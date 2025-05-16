@@ -77,7 +77,12 @@ public class ProjectController : ControllerBase
     try
     {
       var manager = await _projectService.GetProjectManager(projectId);
-      return Ok(manager);
+      var managerDto = new UserDto
+      {
+        Id = manager.Id,
+        Username = manager.Username
+      };
+      return Ok(managerDto);
     }
     catch (Exception e)
     {
