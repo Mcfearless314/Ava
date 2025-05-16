@@ -116,6 +116,9 @@ public class AppDbContext : DbContext
         .IsRequired()
         .HasMaxLength(100);
 
+      ent.Property(u => u.OrganisationId)
+        .IsRequired(false);
+
       ent.Property(u => u.CreatedAt)
         .IsRequired();
 
@@ -123,6 +126,8 @@ public class AppDbContext : DbContext
         .WithOne()
         .HasForeignKey<Credentials>(c => c.UserId)
         .OnDelete(DeleteBehavior.Cascade);
+
+
     });
 
     // Configuration for UserActionsLog entity
