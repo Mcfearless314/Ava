@@ -73,4 +73,16 @@ public class OrganisationService
       throw new Exception("Failed to remove user from organisation.", e);
     }
   }
+
+  public async Task<User> GetAdminForOrganisation(Guid organisationId)
+  {
+    try
+    {
+      return await _organizationRepository.GetAdminForOrganisation(organisationId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to get admin for organisation.", e);
+    }
+  }
 }

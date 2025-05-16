@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
+using Ava.API.Authorization.Policies;
 using Ava.API.DataTransferObjects;
 using Microsoft.AspNetCore.Authorization;
 using Service.Services.Application;
@@ -27,25 +28,48 @@ public class MustBeProjectManagerHandler : AuthorizationHandler<MustBeProjectMan
         context.Fail();
         return;
       }
+
       var request = _httpContextAccessor.HttpContext?.Request;
 
-      request?.EnableBuffering();
-      request!.Body.Position = 0;
+      Guid projectId = Guid.Empty;
 
-      using var reader = new StreamReader(request.Body, leaveOpen: true);
-      var body = await reader.ReadToEndAsync();
-      request.Body.Position = 0;
+      if (request?.RouteValues.TryGetValue("projectId", out var routeValue) == true &&
+          Guid.TryParse(routeValue?.ToString(), out var routeProjectId))
+      {
+        projectId = routeProjectId;
+      }
+      else if (request != null)
+      {
+        request.EnableBuffering();
+        request.Body.Position = 0;
 
-      var dto = JsonSerializer.Deserialize<CreateOrUpdateProjectTaskDto>(body,
-        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        using var reader = new StreamReader(request.Body, leaveOpen: true);
+        var body = await reader.ReadToEndAsync();
+        request.Body.Position = 0;
 
-      if (dto == null || dto.ProjectId == Guid.Empty)
+        try
+        {
+          using var jsonDoc = JsonDocument.Parse(body);
+          if (jsonDoc.RootElement.TryGetProperty("projectId", out var idProperty) &&
+              Guid.TryParse(idProperty.GetString(), out var bodyProjectId))
+          {
+            projectId = bodyProjectId;
+          }
+        }
+        catch
+        {
+          context.Fail();
+          return;
+        }
+      }
+
+      if (projectId == Guid.Empty)
       {
         context.Fail();
         return;
       }
 
-      var projectManager = await _projectService.GetProjectManager(dto.ProjectId);
+      var projectManager = await _projectService.GetProjectManager(projectId);
 
       if (projectManager.Id == userId)
       {

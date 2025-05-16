@@ -13,4 +13,5 @@ public interface IOrganizationRepository
   public Task<string[]> AddUserToOrganisation(Guid userId, Guid organisationId);
 
   public Task<string[]> RemoveUserFromOrganisation(Guid userId, Guid organisationId);
+  Task<User> GetAdminForOrganisation(Guid organisationId);
 }

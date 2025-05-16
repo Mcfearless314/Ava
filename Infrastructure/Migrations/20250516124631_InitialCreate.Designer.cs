@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250516102626_InitialCreate")]
+    [Migration("20250516124631_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -223,13 +223,11 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Infrastructure.Models.ProjectTask", b =>
                 {
-                    b.HasOne("Infrastructure.Models.Project", "Project")
+                    b.HasOne("Infrastructure.Models.Project", null)
                         .WithMany("Tasks")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.ProjectUser", b =>
