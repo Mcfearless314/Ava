@@ -17,7 +17,7 @@ public class ProjectTaskService
     Guid dtoProjectId)
   {
     var id = await GenerateUniqueProjectTaskIdAsync(dtoProjectId);
-    var createdTime = DateTime.UtcNow;
+    var createdTime = DateTime.Now;
     return await _projectTaskRepository.CreateProjectTask(id, dtoTitle, dtoBody, createdTime,
       ProjectTaskStatus.ToDo, dtoProjectId);
   }

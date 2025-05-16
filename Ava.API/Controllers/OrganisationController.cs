@@ -27,16 +27,18 @@ public class OrganisationController : ControllerBase
       return Unauthorized();
     }
     var organisation = await _organisationService.CreateOrganisation(organisationName, userId);
-    return Ok(organisation);
+    return Ok($"Organisation {organisation.Name} created successfully!");
   }
 
+  [Authorize(Policy = "MustBeAdmin")]
   [HttpPut("update")]
   public async Task<IActionResult> UpdateOrganisation([FromBody] UpdateOrganisationDto dto)
   {
     var organisation = await _organisationService.UpdateOrganisation(dto.OrganisationId, dto.Name);
-    return Ok(organisation);
+    return Ok($"Organisation {organisation.Name} updated successfully!");
   }
 
+  [Authorize(Policy = "MustBeAdmin")]
   [HttpDelete("delete/{organisationId}")]
   public async Task<IActionResult> DeleteOrganisation(Guid organisationId)
   {
@@ -44,12 +46,14 @@ public class OrganisationController : ControllerBase
     return Ok("Organisation deleted successfully!");
   }
 
+  [Authorize(Policy = "MustBeAdmin")]
   [HttpPost("addUser")]
   public async Task<IActionResult> AddUserToOrganisation([FromBody] AddOrRemoveUserFromOrganisationDto dto)
   {
     return Ok(await _organisationService.AddUserToOrganisation(dto.UserId, dto.OrganisationId));
   }
 
+  [Authorize(Policy = "MustBeAdmin")]
   [HttpDelete("removeUser")]
   public async Task<IActionResult> RemoveUserFromOrganisation([FromBody] AddOrRemoveUserFromOrganisationDto dto)
   {

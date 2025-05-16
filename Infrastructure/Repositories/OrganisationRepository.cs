@@ -96,4 +96,21 @@ public class OrganisationRepository : IOrganizationRepository
     await _context.SaveChangesAsync();
     return [user.Username, organisation.Name];
   }
+
+  public async Task<User> GetAdminForOrganisation(Guid organisationId)
+  {
+    var organisation = await _context.Organisations
+      .Include(o => o.AdminUser)
+      .FirstOrDefaultAsync(o => o.Id == organisationId);
+    if (organisation == null)
+    {
+      throw new Exception("Organisation not found");
+    }
+
+    if(organisation.AdminUser == null)
+    {
+      throw new Exception("Admin user not found");
+    }
+    return organisation.AdminUser;
+  }
 }

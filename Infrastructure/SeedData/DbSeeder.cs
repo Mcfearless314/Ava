@@ -25,9 +25,8 @@ public static class DbSeeder
           Credentials = new Credentials
           {
             UserId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
-            PasswordHash =
-              "0/1L3XgpegjwB3RUOgA7wR116mDAt6Lxjr3Y71eYNvfXf8tMAvzfIRXy5Ozrv+AXMgibGwNDIMnbzIUh+TtC5CdLBfdeGesaRTAIGbBTQia9K3dvZEu0DNw61rerH3SmYJez6paNWrg+MUfvfsMaYoqTGcDxL0D9FXRtE3FDnjI=",
-            Salt = "aUGTOIF3WKaQtbkX0hSRJA320sDmCN/fX5QG6+CfG/U="
+            PasswordHash = "zwDwLi8a97FHEhF6lGjwAQsrta0r3pTZzhKWf8i7Y+hpV2ni5TSX7LjQ7gmkYIFu5/hzcYcoRdtSVZzUvoo+IIJJ6JAZNkus7oBwycAEL+eB6TKVPH1IlnnSMb+mp+NguJqzlDoNij2h3Wn6nR2lJVXpbx+V8NWVAxa4BNmMURw=",
+            Salt = "x+3pm8HUy8xyt5FzPmbLIrhOWT9Y16D6+q0owfVb9kk="
           },
           CreatedAt = DateTime.Now
         },
@@ -38,9 +37,8 @@ public static class DbSeeder
           Credentials = new Credentials
           {
             UserId = Guid.Parse("44444444-4444-4444-4444-444444444444"),
-            PasswordHash =
-              "1QKreXs2oVnhObBZow9ANtvRDiL+Y762kzJiCU5bR7/oSrkfvxfbxF1xPMU+E2oNTiOA/Ama6+q/GmqzMC7GePJ/3bb5TSFRNkFUcXUZCdI8LyQFZl7FpsSzhBLH+mn9injH2WXwP3t8BRWe5JPdVXRtKp8fpJ/KaVKz5724Yz8=",
-            Salt = "xZSbFGUMiMm//8LgJ6kH73eHTZmvtOVxDH6PuDxy9ms="
+            PasswordHash = "BjvFBVeAxMYwGAlQqMZwQ56iRd3jVYDVYYAZFxPy6RdAGqhDGTNj53KpbX7nxZCZPVvaS85ooCr7V9bfDYaVvbSX0GeF4Rhx53drEilv5+aWbF0f9BNX2orYuQIpjlOr9JT+j13WST5icU3/3Pk1Q3MMljnXNdmR0/PYgYLXDMU=",
+            Salt = "RIjQO/9KMRQ667Q5cw4NLnMOgHnDptburNimhrJ2ksk="
           },
           CreatedAt = DateTime.Now
         },
@@ -51,9 +49,8 @@ public static class DbSeeder
           Credentials = new Credentials
           {
             UserId = Guid.Parse("55555555-5555-5555-5555-555555555555"),
-            PasswordHash =
-              "UeLCEv5D1yOwfHroNWClrk3rySq6Aza2UHWSns0T/B9v+C2u+IfWqAZVu1wM1vDrZo2gYbTK+FoZY7J8dDkiQQB0Y78RSgYTghdqUtaBtAVYuM7p5nSfUGvXeaaiMNrCLksOzdP/OKTl1+I1C4eSjp0vvVIUeaIJHTfE1H8JHwo=",
-            Salt = "VJ675PzrQzTaN5kBB+IRmk8X4YiT7NCOPG4LR8o1uf8="
+            PasswordHash = "1e/Wtrzamlo5UQAAtnWV3GzKqZ2DgcxX5P9Yzp8A2kWnaRkH7kpTswplWR1h46ZRvaJEqoEMi8LsAtCvlaiTTtOhK82j34UAd2IXwOPfkY2QtxmvfkErcOYVsM2CspTo4rabr/WmgVFBbVNZKrAo29I+moVNpk65A2B5Rw4ZbEU=",
+            Salt = "UIIZ4kf+uhbGwlUtMlxDeYAJ98Ju/qoFiSyJA5CA4hU="
           },
           CreatedAt = DateTime.Now
         },
@@ -64,9 +61,8 @@ public static class DbSeeder
           Credentials = new Credentials
           {
             UserId = Guid.Parse("66666666-6666-6666-6666-666666666666"),
-            PasswordHash =
-              "PviyH1BT5/mDRQbtmZt5kQApZBrFyWlI5pfYa4iU2Em2ehQA6XB9PAkNxz2gHDeI+0aXcN6+ClO96nScniEayopiA14f8ZSWqtacvy2fXXwyuF1uI2Zrb//70GqIqqL/QkaB94uAM4enbXWMObFtAGgH8LjDppMfuJMT0YKkN78=",
-            Salt = "fN/JlQVJv6XA9zHJ/31tQruv11IfBYatcYNd/pv3T1o="
+            PasswordHash = "gjBjncme6+HJRGy1ja+E/1n2p7FJE5POR27I4NcKFuLZcTi0oB4GecanlDTc3DBT8WRQdpHNxJaF3MPzhB+cD35U3BMaKckrP+LSky/EoADZcfdEFaY396z9b0mv9KipYBzZhHbdtH+63XhjNwKDbhzIBXGolu3sHSFml056H5o=",
+            Salt = "D90cCRK6Q9Q30V1ylC2t+0JiNPjXQYLIk7qhVAZ8ea4="
           },
           CreatedAt = DateTime.Now
         },
@@ -77,9 +73,8 @@ public static class DbSeeder
           Credentials = new Credentials
           {
             UserId = Guid.Parse("77777777-7777-7777-7777-777777777777"),
-            PasswordHash =
-              "AtdUygsnuBfdDzMOLGQLhNIDThkolDJ8taAioUdU7sguknqLtHYoJazQR0lai6IWTmBMvOrz6IlyOt0iwwtADscyiuB7i6uIqJdk3O7sNN3Z2PAGEsJBqObnd3zu25UHpiYhF92gGyc7K4S0cp4ygpkoysX5j2mCZ5SuhAefVb0=",
-            Salt = "rqxDEPswYXbRHiOW0/w2BcK9QssKyE4KQHO4Ii5qbpA="
+            PasswordHash = "BrkK3hZ096lnYE5A/Wuxu0MNb9xDOzcpFCrAVUSU3SZMGuTvmDYkpX8snzxtRmQruLh5GqTexmnqak1Va78DxQip7gdW5YF0+GNWqY//515EAAIgvHTXZTkMwYB1a5T8QBn/EOhDWkKhdIqFbbD6SZZ+mD4M1f81kAKVZdpcJCE=",
+            Salt = "z38n+5PyDOTyQT/WVQKf4LGQCKqi3tm7AMqU/nP+Ix8="
           },
           CreatedAt = DateTime.Now
         },
