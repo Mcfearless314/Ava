@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250515091225_InitialCreate")]
+    [Migration("20250515112249_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -88,18 +88,18 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Infrastructure.Models.ProjectTask", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Id")
+                        .HasMaxLength(4)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Body")
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("ProjectId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -110,9 +110,7 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
+                    b.HasKey("ProjectId", "Id");
 
                     b.ToTable("ProjectTasks");
                 });
@@ -175,10 +173,10 @@ namespace Infrastructure.Migrations
                     b.Property<Guid?>("ProjectId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("TargetUser")
+                    b.Property<Guid?>("ProjectTaskId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("TaskId")
+                    b.Property<Guid?>("TargetUser")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ActionId");
@@ -231,11 +229,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Infrastructure.Models.ProjectTask", b =>
                 {
-                    b.HasOne("Infrastructure.Models.Project", null)
+                    b.HasOne("Infrastructure.Models.Project", "Project")
                         .WithMany("Tasks")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.UserRole", b =>
