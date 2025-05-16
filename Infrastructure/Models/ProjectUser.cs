@@ -2,6 +2,14 @@
 
 public class ProjectUser
 {
-    public Guid UserId { get; set; }
-    public Guid ProjectId { get; set; }
+    public required Guid UserId { get; set; }
+    public required ProjectRoles Role { get; set; }
+    public required Guid ProjectId { get; set; }
 }
+
+public enum ProjectRoles
+{
+  ProjectManager = 1,
+  Contributer = 2
+}
+

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250515112249_InitialCreate")]
+    [Migration("20250516100229_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -46,12 +46,18 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("AdminUserId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AdminUserId")
+                        .IsUnique();
 
                     b.ToTable("Organisations");
                 });
@@ -63,9 +69,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("OrganisationId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("ProjectManagerId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Subtitle")
@@ -80,8 +83,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrganisationId");
-
-                    b.HasIndex("ProjectManagerId");
 
                     b.ToTable("Projects");
                 });
@@ -123,6 +124,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("ProjectId", "UserId");
 
                     b.ToTable("ProjectUsers");
@@ -137,12 +141,17 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("OrganisationId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrganisationId");
 
                     b.ToTable("Users");
                 });
@@ -184,24 +193,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("UserActionsLogs");
                 });
 
-            modelBuilder.Entity("Infrastructure.Models.UserRole", b =>
-                {
-                    b.Property<Guid>("OrganisationId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("OrganisationId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRoles");
-                });
-
             modelBuilder.Entity("Infrastructure.Models.Credentials", b =>
                 {
                     b.HasOne("Infrastructure.Models.User", null)
@@ -211,6 +202,17 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Infrastructure.Models.Organisation", b =>
+                {
+                    b.HasOne("Infrastructure.Models.User", "AdminUser")
+                        .WithOne()
+                        .HasForeignKey("Infrastructure.Models.Organisation", "AdminUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AdminUser");
+                });
+
             modelBuilder.Entity("Infrastructure.Models.Project", b =>
                 {
                     b.HasOne("Infrastructure.Models.Organisation", null)
@@ -218,13 +220,6 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("OrganisationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Infrastructure.Models.User", "ProjectManager")
-                        .WithMany()
-                        .HasForeignKey("ProjectManagerId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("ProjectManager");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.ProjectTask", b =>
@@ -238,32 +233,35 @@ namespace Infrastructure.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("Infrastructure.Models.UserRole", b =>
+            modelBuilder.Entity("Infrastructure.Models.ProjectUser", b =>
+                {
+                    b.HasOne("Infrastructure.Models.Project", null)
+                        .WithMany("ProjectUsers")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.User", b =>
                 {
                     b.HasOne("Infrastructure.Models.Organisation", null)
-                        .WithMany("UserRoles")
+                        .WithMany("Users")
                         .HasForeignKey("OrganisationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("Infrastructure.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Organisation", b =>
                 {
                     b.Navigation("Projects");
 
-                    b.Navigation("UserRoles");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Project", b =>
                 {
+                    b.Navigation("ProjectUsers");
+
                     b.Navigation("Tasks");
                 });
 

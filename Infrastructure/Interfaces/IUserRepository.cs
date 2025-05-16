@@ -6,7 +6,7 @@ public interface IUserRepository
 {
   public Task Register(string username, string passwordHash, string salt);
 
-  public Task<List<UserRole>> GetAllUsersWithRoles(Guid organisationId);
+  public Task<List<User>> GetAllUsers(Guid organisationId);
 
   public Task<List<User>> GetUsersByProject(Guid projectId);
 
@@ -16,7 +16,7 @@ public interface IUserRepository
 
   public Task<User?> GetUserWithCredentialsByUsername(string username);
 
-  public Task<User> UpdateUser(User user);
+  public Task<User> UpdateUser(Guid userId, string username, string salt, string passwordHash);
 
   public Task DeleteUser(Guid userId);
 }

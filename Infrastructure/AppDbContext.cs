@@ -17,8 +17,6 @@ public class AppDbContext : DbContext
   public DbSet<ProjectUser> ProjectUsers { get; set; }
   public DbSet<User> Users { get; set; }
   public DbSet<UserActionsLog> UserActionsLogs { get; set; }
-  public DbSet<UserRole> UserRoles { get; set; }
-
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
@@ -52,10 +50,15 @@ public class AppDbContext : DbContext
         .HasForeignKey(p => p.OrganisationId)
         .OnDelete(DeleteBehavior.Cascade);
 
-      ent.HasMany(o => o.UserRoles)
+      ent.HasOne(o => o.AdminUser)
+        .WithOne()
+        .HasForeignKey<Organisation>(o => o.AdminUserId)
+        .OnDelete(DeleteBehavior.NoAction);
+
+      ent.HasMany(o => o.Users)
         .WithOne()
         .HasForeignKey(u => u.OrganisationId)
-        .OnDelete(DeleteBehavior.Cascade);
+        .OnDelete(DeleteBehavior.NoAction);
     });
 
     // Configuration for Project entity
@@ -66,17 +69,11 @@ public class AppDbContext : DbContext
       ent.Property(p => p.Title).IsRequired().HasMaxLength(50);
       ent.Property(p => p.Subtitle).HasMaxLength(500);
       ent.Property(p => p.Id).IsRequired();
-      ent.Property(p => p.ProjectManagerId);
 
       ent.HasMany(p => p.Tasks)
         .WithOne()
         .HasForeignKey(t => t.ProjectId)
         .OnDelete(DeleteBehavior.Cascade);
-
-      ent.HasOne(p => p.ProjectManager)
-        .WithMany()
-        .HasForeignKey(p => p.ProjectManagerId)
-        .OnDelete(DeleteBehavior.SetNull);
     });
 
 
@@ -107,6 +104,7 @@ public class AppDbContext : DbContext
 
       ent.Property(pu => pu.UserId).IsRequired();
       ent.Property(pu => pu.ProjectId).IsRequired();
+      ent.Property(pu => pu.Role).IsRequired();
     });
 
     // Configuration for User entity
@@ -138,21 +136,6 @@ public class AppDbContext : DbContext
       ent.Property(ual => ual.ActionUser).IsRequired();
 
 
-    });
-
-    // Configuration for UserRole entity
-    modelBuilder.Entity<UserRole>(ent =>
-    {
-      ent.HasKey(ur => new { ur.OrganisationId, ur.UserId });
-
-      ent.Property(ur => ur.UserId).IsRequired();
-      ent.Property(ur => ur.OrganisationId).IsRequired();
-      ent.Property(ur => ur.Role).IsRequired();
-
-      ent.HasOne<User>(ur => ur.User)
-        .WithMany()
-        .HasForeignKey(ur => ur.UserId)
-        .OnDelete(DeleteBehavior.Cascade);
     });
   }
 }
