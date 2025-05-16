@@ -49,7 +49,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    AdminUserId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    AdminUserId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -83,7 +83,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Username = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    OrganisationId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    OrganisationId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -9,5 +9,5 @@ public class User
     public required string Username { get; set; }
     public required DateTime CreatedAt { get; set; }
     public required Credentials Credentials { get; set; }
-    public Guid OrganisationId { get; set; }
+    public Guid? OrganisationId { get; set; }
 }

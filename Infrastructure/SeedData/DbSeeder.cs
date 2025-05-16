@@ -14,25 +14,6 @@ public static class DbSeeder
 
     context.Database.Migrate();
 
-    if (!context.Organisations.Any())
-    {
-      var organisations = new List<Organisation>
-      {
-        new()
-        {
-          Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-          Name = "TestCorp",
-        },
-        new()
-        {
-          Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-          Name = "AnotherCorp",
-        }
-      };
-
-      context.Organisations.AddRange(organisations);
-    }
-
     if (!context.Users.Any())
     {
       var users = new List<User>
@@ -105,6 +86,29 @@ public static class DbSeeder
       };
 
       context.Users.AddRange(users);
+      context.SaveChanges();
+    }
+
+    if (!context.Organisations.Any())
+    {
+      var organisations = new List<Organisation>
+      {
+        new()
+        {
+          Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+          Name = "TestCorp",
+          AdminUserId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
+        },
+        new()
+        {
+          Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+          Name = "AnotherCorp",
+          AdminUserId = Guid.Parse("44444444-4444-4444-4444-444444444444"),
+        }
+      };
+
+      context.Organisations.AddRange(organisations);
+      context.SaveChanges();
     }
 
     if (!context.Projects.Any())
@@ -127,6 +131,7 @@ public static class DbSeeder
         }
       };
       context.Projects.AddRange(projects);
+      context.SaveChanges();
     }
 
     if (!context.ProjectUsers.Any())
@@ -147,12 +152,6 @@ public static class DbSeeder
         },
         new()
         {
-          ProjectId = Guid.Parse("88888888-8888-8888-8888-888888888888"),
-          UserId = Guid.Parse("44444444-4444-4444-4444-444444444444"),
-          Role = ProjectRoles.Contributer,
-        },
-        new()
-        {
           ProjectId = Guid.Parse("99999999-9999-9999-9999-999999999999"),
           UserId = Guid.Parse("77777777-7777-7777-7777-777777777777"),
           Role = ProjectRoles.Contributer,
@@ -160,6 +159,7 @@ public static class DbSeeder
       };
 
       context.ProjectUsers.AddRange(projectUsers);
+      context.SaveChanges();
     }
 
     if (!context.ProjectTasks.Any())
@@ -205,8 +205,8 @@ public static class DbSeeder
       };
 
       context.ProjectTasks.AddRange(projectTasks);
+      context.SaveChanges();
     }
 
-    context.SaveChanges();
   }
 }

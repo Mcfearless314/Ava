@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250516100229_InitialCreate")]
+    [Migration("20250516102626_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -46,7 +46,7 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("AdminUserId")
+                    b.Property<Guid?>("AdminUserId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -141,7 +141,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("OrganisationId")
+                    b.Property<Guid?>("OrganisationId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Username")
@@ -207,8 +207,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Infrastructure.Models.User", "AdminUser")
                         .WithOne()
                         .HasForeignKey("Infrastructure.Models.Organisation", "AdminUserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("AdminUser");
                 });
@@ -247,8 +246,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Infrastructure.Models.Organisation", null)
                         .WithMany("Users")
                         .HasForeignKey("OrganisationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Organisation", b =>
