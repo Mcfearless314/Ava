@@ -1,0 +1,18 @@
+<p>Login</p>
+
+<form id="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <label for="username">Username: </label>
+  <input id="username" name="username" type="text" formControlName="username" required />
+
+  <label for="password">Password: </label>
+  <input id="password" name="password" type="password" formControlName="password" required />
+
+  <button type="submit">Submit</button>
+</form>
+
+<div *ngIf="loginSuccess" class="success-message">
+  Login successful!
+</div>
+<div *ngIf="loginError" class="error-message">
+  Login failed. Please try again.
+</div>
