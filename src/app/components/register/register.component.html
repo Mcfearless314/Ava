@@ -1,0 +1,18 @@
+<p>Register</p>
+
+<form id="registerForm" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <label for="username">Username: </label>
+  <input id="username" name="username" type="text" formControlName="username" required />
+
+  <label for="password">Password: </label>
+  <input id="password" name="password" type="password" formControlName="password" required />
+
+  <button type="submit">Submit</button>
+</form>
+
+<div *ngIf="registerSuccess" class="success-message">
+  Registration successful! You can now log in.
+</div>
+<div *ngIf="registerError" class="error-message">
+  Registration failed. Please try again.
+</div>
