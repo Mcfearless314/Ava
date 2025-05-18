@@ -21,7 +21,7 @@ namespace Infrastructure.Migrations
                     ActionPerformedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ActionUser = table.Column<Guid>(type: "TEXT", nullable: false),
                     TargetUser = table.Column<Guid>(type: "TEXT", nullable: true),
-                    ProjectTaskId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    ProjectTaskId = table.Column<string>(type: "TEXT", nullable: true),
                     ProjectId = table.Column<Guid>(type: "TEXT", nullable: true),
                     OrganisationId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
