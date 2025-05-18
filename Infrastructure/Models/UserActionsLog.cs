@@ -12,7 +12,7 @@ public class UserActionsLog
   public required DateTime ActionPerformedAt { get; set; }
   public required Guid ActionUser { get; set; }
   public Guid? TargetUser { get; set; }
-  public Guid? ProjectTaskId { get; set; }
+  public string? ProjectTaskId { get; set; }
   public Guid? ProjectId { get; set; }
   public Guid? OrganisationId { get; set; }
 }

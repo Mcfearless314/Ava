@@ -52,10 +52,12 @@ public class ProjectTaskRepository : IProjectTaskRepository
     var projectTask = await _context.ProjectTasks
       .FirstOrDefaultAsync(task => task.Id == projectTaskId);
 
-    if (projectTask == null) return projectTask;
+    if (projectTask == null) return null;
 
-    _context.ProjectTasks.Remove(projectTask);
+    projectTask.Status = ProjectTaskStatus.Deleted;
+    _context.ProjectTasks.Update(projectTask);
     await _context.SaveChangesAsync();
+
     return projectTask;
   }
 

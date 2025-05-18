@@ -12,6 +12,7 @@ public static class Dependencies
     services.AddScoped<UserService>();
     services.AddScoped<ProjectService>();
     services.AddScoped<ProjectTaskService>();
+    services.AddScoped<UserActionsLogService>();
 
     services.AddScoped<PasswordHashAlgorithm, Argon2IdPasswordHashAlgorithm>();
     return services;
