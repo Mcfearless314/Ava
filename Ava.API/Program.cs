@@ -84,10 +84,26 @@ public static class Program
       options.AddPolicy("MustBeAdmin",
         policy => { policy.Requirements.Add(new MustBeAdminRequirement()); });
 
+      options.AddPolicy("MustBeProjectUser",
+        policy => { policy.Requirements.Add(new MustBeProjectUserRequirement()); });
+
+      options.AddPolicy("MustBeAdminOrProjectManager",
+        policy => { policy.Requirements.Add(new MustBeAdminOrProjectManagerRequirement()); });
+
+      options.AddPolicy("MustBeAdminOrProjectUser",
+        policy => { policy.Requirements.Add(new MustBeAdminOrProjectUserRequirement()); });
     });
 
     builder.Services.AddScoped<IAuthorizationHandler, MustBeProjectManagerHandler>();
     builder.Services.AddScoped<IAuthorizationHandler, MustBeAdminHandler>();
+    builder.Services.AddScoped<IAuthorizationHandler, MustBeProjectUserHandler>();
+
+    builder.Services.AddScoped<MustBeProjectUserHandler>();
+    builder.Services.AddScoped<MustBeAdminHandler>();
+    builder.Services.AddScoped<MustBeProjectManagerHandler>();
+
+    builder.Services.AddScoped<IAuthorizationHandler, MustBeAdminOrProjectManagerHandler>();
+    builder.Services.AddScoped<IAuthorizationHandler, MustBeAdminOrProjectUserHandler>();
 
 
     var app = builder.Build();

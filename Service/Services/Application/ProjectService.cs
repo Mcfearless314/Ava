@@ -84,4 +84,16 @@ public class ProjectService
       throw new Exception("Failed to remove user from project.", e);
     }
   }
+
+  public async Task<Project> GetProjectByProjectId(Guid projectId)
+  {
+    try
+    {
+      return await _projectRepository.GetProjectById(projectId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to retrieve project, e");
+    }
+  }
 }

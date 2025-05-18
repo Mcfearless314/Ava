@@ -111,4 +111,11 @@ public class ProjectRepository : IProjectRepository
       await _context.SaveChangesAsync();
     }
   }
+
+  public async Task<Project> GetProjectById(Guid projectId)
+  {
+    var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+    if(project == null) throw new KeyNotFoundException();
+    return project;
+  }
 }

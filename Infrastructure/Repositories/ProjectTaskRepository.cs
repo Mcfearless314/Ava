@@ -85,7 +85,7 @@ public class ProjectTaskRepository : IProjectTaskRepository
   public async Task<List<ProjectTask>> GetAllProjectTasksForProject(Guid projectId)
   {
     var projectTasks = await _context.ProjectTasks
-      .Where(task => task.ProjectId == projectId)
+      .Where(task => task.ProjectId == projectId && task.Status != ProjectTaskStatus.Deleted)
       .ToListAsync();
 
     return projectTasks;
