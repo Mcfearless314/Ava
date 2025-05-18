@@ -1,4 +1,5 @@
-﻿using Ava.API.DataTransferObjects;
+﻿using System.Security.Claims;
+using Ava.API.DataTransferObjects;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,8 @@ public class ProjectTaskController : ControllerBase
   [HttpPost("create")]
   public async Task<IActionResult> CreateProjectTask([FromBody] CreateOrUpdateProjectTaskDto dto)
   {
-    var projectTask = await _projectTaskService.CreateProjectTask(dto.Title, dto.Body, dto.Status, dto.ProjectId);
+    var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    var projectTask = await _projectTaskService.CreateProjectTask(dto.Title, dto.Body, dto.Status, dto.ProjectId, userId);
     return Ok(projectTask);
   }
 
@@ -30,8 +32,9 @@ public class ProjectTaskController : ControllerBase
   [HttpPut("update/{projectTaskId}")]
   public async Task<IActionResult> UpdateProjectTask(string projectTaskId, [FromBody] CreateOrUpdateProjectTaskDto dto)
   {
+    var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
     var projectTask =
-      await _projectTaskService.UpdateProjectTask(projectTaskId, dto.Title, dto.Body, dto.Status, dto.ProjectId);
+      await _projectTaskService.UpdateProjectTask(projectTaskId, dto.Title, dto.Body, dto.ProjectId, userId);
     if (projectTask == null)
       return NotFound("No Project Task Found");
     return Ok(projectTask);
@@ -41,7 +44,8 @@ public class ProjectTaskController : ControllerBase
   [HttpDelete("delete/{projectTaskId}/{projectId:guid}")]
   public async Task<IActionResult> DeleteProjectTask(string projectTaskId, Guid projectId)
   {
-    var projectTask = await _projectTaskService.DeleteProjectTask(projectTaskId, projectId);
+    var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    var projectTask = await _projectTaskService.DeleteProjectTask(projectTaskId, projectId, userId);
     if (projectTask == null)
       return NotFound("No Project Task Found");
     return Ok("Project Task Deleted");
@@ -61,7 +65,8 @@ public class ProjectTaskController : ControllerBase
   public async Task<IActionResult> UpdateProjectTaskStatus(string projectTaskId, ProjectTaskStatus projectTaskStatus,
     Guid projectId)
   {
-    var projectTask = await _projectTaskService.UpdateProjectTaskStatus(projectTaskId, projectTaskStatus, projectId);
+    var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    var projectTask = await _projectTaskService.UpdateProjectTaskStatus(projectTaskId, projectTaskStatus, projectId, userId);
     if (projectTask == null)
       return NotFound("No Project Task Found");
     return Ok(projectTask);

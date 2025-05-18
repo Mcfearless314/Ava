@@ -7,24 +7,27 @@ namespace Service.Services.Application;
 public class ProjectTaskService
 {
   private readonly IProjectTaskRepository _projectTaskRepository;
+  private readonly UserActionsLogService _userActionsLogService;
 
-  public ProjectTaskService(IProjectTaskRepository projectTaskRepository)
+  public ProjectTaskService(IProjectTaskRepository projectTaskRepository, UserActionsLogService userActionsLogService)
   {
     _projectTaskRepository = projectTaskRepository;
+    _userActionsLogService = userActionsLogService;
   }
 
   public async Task<ProjectTask?> CreateProjectTask(string dtoTitle, string? dtoBody, ProjectTaskStatus dtoStatus,
-    Guid dtoProjectId)
+    Guid dtoProjectId, Guid userId)
   {
     var id = await GenerateUniqueProjectTaskIdAsync(dtoProjectId);
     var createdTime = DateTime.Now;
-    return await _projectTaskRepository.CreateProjectTask(id, dtoTitle, dtoBody, createdTime,
+    var projectTask = await _projectTaskRepository.CreateProjectTask(id, dtoTitle, dtoBody, createdTime,
       ProjectTaskStatus.ToDo, dtoProjectId);
+    await _userActionsLogService.CreateLog(dtoProjectId, null, id, UserActions.CreateProjectTask, userId);
+    return projectTask;
   }
 
   public async Task<object?> UpdateProjectTask(string projectTaskId, string dtoTitle, string? dtoBody,
-    ProjectTaskStatus dtoStatus,
-    Guid projectId)
+    Guid projectId, Guid userId)
   {
     var projectTask = await _projectTaskRepository.GetProjectTask(projectTaskId, projectId);
     if (projectTask == null)
@@ -32,19 +35,20 @@ public class ProjectTaskService
 
     projectTask.Title = dtoTitle;
     projectTask.Body = dtoBody;
-    projectTask.Status = dtoStatus;
 
     await _projectTaskRepository.UpdateProjectTask(projectTaskId, dtoTitle, dtoBody);
+    await _userActionsLogService.CreateLog(projectId, null, projectTaskId, UserActions.UpdateProjectTask, userId);
     return projectTask;
   }
 
-  public async Task<ProjectTask?> DeleteProjectTask(string projectTaskId, Guid projectId)
+  public async Task<ProjectTask?> DeleteProjectTask(string projectTaskId, Guid projectId, Guid userId)
   {
     var projectTask = await _projectTaskRepository.GetProjectTask(projectTaskId, projectId);
     if (projectTask == null)
       return projectTask;
 
     await _projectTaskRepository.DeleteProjectTask(projectTaskId);
+    await _userActionsLogService.CreateLog(projectId, null, projectTaskId, UserActions.DeleteProjectTask, userId);
     return projectTask;
   }
 
@@ -57,14 +61,18 @@ public class ProjectTaskService
     return projectTask;
   }
 
-  public async Task<object?> UpdateProjectTaskStatus(string projectTaskId, ProjectTaskStatus status, Guid projectId)
+  public async Task<object?> UpdateProjectTaskStatus(string projectTaskId, ProjectTaskStatus status, Guid projectId, Guid userId)
   {
     var projectTask = await _projectTaskRepository.GetProjectTask(projectTaskId, projectId);
     if (projectTask == null)
       return null;
 
+    if (status == ProjectTaskStatus.Deleted)
+      throw new InvalidOperationException("Cannot perform operation.");
+
     projectTask.Status = status;
     await _projectTaskRepository.UpdateProjectTaskStatus(projectTaskId, status, projectId);
+    await _userActionsLogService.CreateLog(projectId, null, projectTaskId, UserActions.UpdateProjectTaskStatus, userId);
     return projectTask;
   }
 
