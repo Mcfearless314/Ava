@@ -1,5 +1,6 @@
+import { CommonModule } from "@angular/common";
 import { Component } from '@angular/core';
-import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
 
@@ -8,13 +9,16 @@ import { TokenService } from '../../services/token.service';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
     standalone: true,
-    imports: [ReactiveFormsModule]
+    imports: [CommonModule, ReactiveFormsModule]
 })
 export class LoginComponent {
   loginForm = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.maxLength(50)]),
     password: new FormControl('', [Validators.required, Validators.maxLength(50)])
   });
+
+  loginSuccess = false;
+  loginError = false;
 
   constructor(private authService: AuthService, private tokenService: TokenService) { }
 
@@ -28,10 +32,14 @@ export class LoginComponent {
           console.log('Login successful', response);
           this.tokenService.setToken(response.token);
           // Store token or redirect user
+          this.loginSuccess = true;
+          this.loginError = false;
         },
         error: (error) => {
           console.error('Login failed', error);
           // Handle login error
+          this.loginError = true;
+          this.loginSuccess = false;
         }
       });
     }

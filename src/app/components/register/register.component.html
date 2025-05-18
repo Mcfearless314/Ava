@@ -9,3 +9,10 @@
 
   <button type="submit">Submit</button>
 </form>
+
+<div *ngIf="registerSuccess" class="success-message">
+  Registration successful! You can now log in.
+</div>
+<div *ngIf="registerError" class="error-message">
+  Registration failed. Please try again.
+</div>

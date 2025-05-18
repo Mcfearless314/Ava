@@ -9,3 +9,10 @@
 
   <button type="submit">Submit</button>
 </form>
+
+<div *ngIf="loginSuccess" class="success-message">
+  Login successful!
+</div>
+<div *ngIf="loginError" class="error-message">
+  Login failed. Please try again.
+</div>

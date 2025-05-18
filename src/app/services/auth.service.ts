@@ -11,11 +11,15 @@ export interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = '/api';
+  private apiUrl = '/api/Auth';
 
   constructor(private http: HttpClient) { }
 
   login(username: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/User/login`, { username, password });
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { username, password });
+  }
+
+  register(username: string, password: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/register`, { username, password });
   }
 }
