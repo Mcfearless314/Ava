@@ -21,7 +21,7 @@ public class UserActionsLogService
       ProjectId = projectId,
       OrganisationId = organisationId,
       ProjectTaskId = projectTaskId,
-      ActionPerformedAt = DateTime.UtcNow,
+      ActionPerformedAt = DateTime.Now,
       Description = GetDescription(action),
       ActionUser = actionUserId
     };
