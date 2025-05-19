@@ -80,15 +80,12 @@ public class MustBeAdminHandler : AuthorizationHandler<MustBeAdminRequirement>
       }
     }
 
-    if (organisationId == Guid.Empty)
+    if (projectId != Guid.Empty)
     {
-      if (projectId != Guid.Empty)
+      var project = await _projectService.GetProjectByProjectId(projectId);
+      if (project != null)
       {
-        var project = await _projectService.GetProjectByProjectId(projectId);
-        if (project != null)
-        {
-          organisationId = project.OrganisationId;
-        }
+        organisationId = project.OrganisationId;
       }
 
       if (organisationId == Guid.Empty)
