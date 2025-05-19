@@ -16,4 +16,5 @@ public interface IProjectRepository
   public Task<User> GetProjectManager(Guid projectId);
 
   public Task RemoveUserFromProject(Guid userId, Guid projectId, Guid requesterId);
+  public Task<Project> GetProjectById(Guid projectId);
 }

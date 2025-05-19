@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Ava.API.DataTransferObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services.Application;
-using Service.Services.Security;
 
 namespace Ava.API.Controllers;
 
@@ -18,14 +12,12 @@ namespace Ava.API.Controllers;
 public class UserController : ControllerBase
 {
   private readonly UserService _userService;
-  private readonly JwtTokenService _jwtTokenService;
-
-  public UserController(UserService userService, JwtTokenService jwtTokenService)
+  public UserController(UserService userService)
   {
     _userService = userService;
-    _jwtTokenService = jwtTokenService;
   }
 
+  [Authorize(Policy = "MustBeAdmin")]
   [HttpGet("organisation/{organisationId}")]
   public async Task<ActionResult<List<UserDto>>> GetUsers(Guid organisationId)
   {
@@ -40,6 +32,7 @@ public class UserController : ControllerBase
     return Ok(dtos);
   }
 
+  [Authorize(Policy = "MustBeAdminOrProjectUser")]
   [HttpGet("project/{projectId}")]
   public async Task<IActionResult> GetUsersByProject([FromRoute] Guid projectId)
   {

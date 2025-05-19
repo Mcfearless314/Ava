@@ -17,6 +17,7 @@ public class ProjectController : ControllerBase
     _projectService = projectService;
   }
 
+  [Authorize(Policy = "MustBeAdmin")]
   [HttpPost("create")]
   public async Task<IActionResult> CreateProject([FromBody] CreateProjectDto dto)
   {
@@ -24,6 +25,7 @@ public class ProjectController : ControllerBase
     return Ok(project);
   }
 
+  [Authorize(Policy = "MustBeAdmin")]
   [HttpPut("update/{projectId}")]
   public async Task<IActionResult> UpdateProject(Guid projectId, [FromBody] CreateProjectDto dto)
   {
@@ -31,6 +33,7 @@ public class ProjectController : ControllerBase
     return Ok(project);
   }
 
+  [Authorize(Policy = "MustBeAdmin")]
   [HttpDelete("delete/{projectId}")]
   public async Task<IActionResult> DeleteProject(Guid projectId)
   {
@@ -38,6 +41,7 @@ public class ProjectController : ControllerBase
     return Ok(new { Message = "Project deleted successfully!" });
   }
 
+  [Authorize(Policy = "MustBeAdminOrProjectUser")]
   [HttpGet("tasks/{projectId}")]
   public async Task<IActionResult> GetProjectTasks(Guid projectId)
   {
@@ -57,6 +61,7 @@ public class ProjectController : ControllerBase
     return Ok(managerDto);
   }
 
+  [Authorize(Policy = "MustBeAdmin")]
   [HttpDelete("remove-user/{userId}/{projectId}")]
   public async Task<IActionResult> RemoveUserFromProject(Guid userId, Guid projectId)
   {

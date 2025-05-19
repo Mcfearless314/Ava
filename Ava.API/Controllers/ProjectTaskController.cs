@@ -19,7 +19,7 @@ public class ProjectTaskController : ControllerBase
     _projectTaskService = projectTaskService;
   }
 
-  [Authorize(Policy = "MustBeProjectManager")]
+  [Authorize(Policy = "MustBeAdminOrProjectManager")]
   [HttpPost("create")]
   public async Task<IActionResult> CreateProjectTask([FromBody] CreateOrUpdateProjectTaskDto dto)
   {
@@ -28,7 +28,7 @@ public class ProjectTaskController : ControllerBase
     return Ok(projectTask);
   }
 
-  [Authorize(Policy = "MustBeProjectManager")]
+  [Authorize(Policy = "MustBeAdminOrProjectManager")]
   [HttpPut("update/{projectTaskId}")]
   public async Task<IActionResult> UpdateProjectTask(string projectTaskId, [FromBody] CreateOrUpdateProjectTaskDto dto)
   {
@@ -40,7 +40,7 @@ public class ProjectTaskController : ControllerBase
     return Ok(projectTask);
   }
 
-  [Authorize(Policy = "MustBeProjectManager")]
+  [Authorize(Policy = "MustBeAdminOrProjectManager")]
   [HttpDelete("delete/{projectTaskId}/{projectId:guid}")]
   public async Task<IActionResult> DeleteProjectTask(string projectTaskId, Guid projectId)
   {
@@ -51,7 +51,7 @@ public class ProjectTaskController : ControllerBase
     return Ok("Project Task Deleted");
   }
 
-
+  [Authorize(Policy = "MustBeAdminOrProjectUser")]
   [HttpGet("get/{projectTaskId}/{projectId:guid}")]
   public async Task<IActionResult> GetProjectTask(string projectTaskId, Guid projectId)
   {
@@ -61,6 +61,7 @@ public class ProjectTaskController : ControllerBase
     return Ok(projectTask);
   }
 
+  [Authorize(Policy = "MustBeAdminOrProjectUser")]
   [HttpPut("updateStatus/{projectTaskId}/{projectTaskStatus}/{projectId:guid}")]
   public async Task<IActionResult> UpdateProjectTaskStatus(string projectTaskId, ProjectTaskStatus projectTaskStatus,
     Guid projectId)
@@ -72,6 +73,7 @@ public class ProjectTaskController : ControllerBase
     return Ok(projectTask);
   }
 
+  [Authorize(Policy = "MustBeAdminOrProjectUser")]
   [HttpGet("getAllProjectTasksForProject/{projectId:guid}")]
   public async Task<IActionResult> GetAllProjectTasksForProject(Guid projectId)
   {

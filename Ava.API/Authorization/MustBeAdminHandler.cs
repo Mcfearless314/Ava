@@ -9,11 +9,14 @@ namespace Ava.API.Authorization;
 public class MustBeAdminHandler : AuthorizationHandler<MustBeAdminRequirement>
 {
   private readonly OrganisationService _organisationService;
+  private readonly ProjectService _projectService;
   private readonly IHttpContextAccessor _httpContextAccessor;
 
-  public MustBeAdminHandler(OrganisationService organisationService, IHttpContextAccessor httpContextAccessor)
+  public MustBeAdminHandler(OrganisationService organisationService, ProjectService projectService,
+    IHttpContextAccessor httpContextAccessor)
   {
     _organisationService = organisationService;
+    _projectService = projectService;
     _httpContextAccessor = httpContextAccessor;
   }
 
@@ -30,12 +33,19 @@ public class MustBeAdminHandler : AuthorizationHandler<MustBeAdminRequirement>
     var request = httpContext?.Request;
 
     Guid organisationId = Guid.Empty;
+    Guid projectId = Guid.Empty;
 
     if (request?.RouteValues.TryGetValue("organisationId", out var routeValue) == true &&
         Guid.TryParse(routeValue?.ToString(), out var routeOrgId))
     {
       organisationId = routeOrgId;
     }
+    else if (request?.RouteValues.TryGetValue("projectId", out var projectRouteValue) == true &&
+             Guid.TryParse(projectRouteValue?.ToString(), out var routeProjectId))
+    {
+      projectId = routeProjectId;
+    }
+
     else if (request != null)
     {
       request.EnableBuffering();
@@ -48,10 +58,19 @@ public class MustBeAdminHandler : AuthorizationHandler<MustBeAdminRequirement>
       try
       {
         using var jsonDoc = JsonDocument.Parse(body);
-        if (jsonDoc.RootElement.TryGetProperty("organisationId", out var idProperty) &&
+
+        if (organisationId == Guid.Empty &&
+            jsonDoc.RootElement.TryGetProperty("organisationId", out var idProperty) &&
             Guid.TryParse(idProperty.GetString(), out var bodyOrgId))
         {
           organisationId = bodyOrgId;
+        }
+
+        if (organisationId == Guid.Empty && projectId == Guid.Empty &&
+            jsonDoc.RootElement.TryGetProperty("projectId", out var projectIdProperty) &&
+            Guid.TryParse(projectIdProperty.GetString(), out var bodyProjectId))
+        {
+          projectId = bodyProjectId;
         }
       }
       catch
@@ -61,10 +80,19 @@ public class MustBeAdminHandler : AuthorizationHandler<MustBeAdminRequirement>
       }
     }
 
-    if (organisationId == Guid.Empty)
+    if (projectId != Guid.Empty)
     {
-      context.Fail();
-      return;
+      var project = await _projectService.GetProjectByProjectId(projectId);
+      if (project != null)
+      {
+        organisationId = project.OrganisationId;
+      }
+
+      if (organisationId == Guid.Empty)
+      {
+        context.Fail();
+        return;
+      }
     }
 
     var organisationAdmin = await _organisationService.GetAdminForOrganisation(organisationId);

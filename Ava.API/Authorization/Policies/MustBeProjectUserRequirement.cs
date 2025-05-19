@@ -2,7 +2,6 @@
 
 namespace Ava.API.Authorization.Policies;
 
-public class MustBeProjectManagerRequirement : IAuthorizationRequirement
+public class MustBeProjectUserRequirement : IAuthorizationRequirement
 {
 }
-

@@ -6,17 +6,24 @@ namespace Service.Services.Application;
 public class ProjectService
 {
   private readonly IProjectRepository _projectRepository;
+  private readonly UserService _userService;
 
-
-  public ProjectService(IProjectRepository projectRepository)
+  public ProjectService(IProjectRepository projectRepository, UserService userService)
   {
     _projectRepository = projectRepository;
+    _userService = userService;
   }
 
   public async Task<Project> CreateProject(string title, string subTitle, Guid organisationId, Guid projectManagerId)
   {
     try
     {
+      var users = await _userService.GetAllUsers(organisationId);
+      if (!users.Select(u => u.Id).Contains(projectManagerId))
+      {
+        throw new Exception("Project manager not found in the organisation.");
+      }
+
       return await _projectRepository.CreateProject(title, subTitle, organisationId, projectManagerId);
     }
     catch (Exception e)
@@ -82,6 +89,18 @@ public class ProjectService
     catch (Exception e)
     {
       throw new Exception("Failed to remove user from project.", e);
+    }
+  }
+
+  public async Task<Project> GetProjectByProjectId(Guid projectId)
+  {
+    try
+    {
+      return await _projectRepository.GetProjectById(projectId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to retrieve project, e");
     }
   }
 }
