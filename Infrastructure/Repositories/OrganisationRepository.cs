@@ -113,4 +113,17 @@ public class OrganisationRepository : IOrganizationRepository
     }
     return organisation.AdminUser;
   }
+
+  public async Task<ICollection<Project>> GetAllProjects(Guid organisationId)
+  {
+    var organisation = await _context.Organisations
+      .Include(o => o.Projects)
+      .FirstOrDefaultAsync(o => o.Id == organisationId);
+    if (organisation == null)
+    {
+      throw new Exception("Organisation not found");
+    }
+
+    return organisation.Projects;
+  }
 }

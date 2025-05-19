@@ -17,8 +17,8 @@ public class UserController : ControllerBase
     _userService = userService;
   }
 
-  [Authorize(Policy = "MustBeAdmin")]
-  [HttpGet("organisation/{organisationId}")]
+  [Authorize(Policy = "MustBePartOfOrganisation")]
+  [HttpGet("getUsers/{organisationId}")]
   public async Task<ActionResult<List<UserDto>>> GetUsers(Guid organisationId)
   {
     var users = await _userService.GetAllUsers(organisationId);
@@ -33,7 +33,7 @@ public class UserController : ControllerBase
   }
 
   [Authorize(Policy = "MustBeAdminOrProjectUser")]
-  [HttpGet("project/{projectId}")]
+  [HttpGet("getUsersByProject/{projectId}")]
   public async Task<IActionResult> GetUsersByProject([FromRoute] Guid projectId)
   {
     var users = await _userService.GetUsersByProject(projectId);
@@ -47,8 +47,8 @@ public class UserController : ControllerBase
     return Ok(userDtos);
   }
 
-  [HttpPost("update")]
-  [Authorize]
+  [Authorize(Policy = "MustBeAdmin")]
+  [HttpPost("updateUser")]
   public async Task<IActionResult> Update([FromBody] CredentialsDto dto)
   {
     var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -61,7 +61,8 @@ public class UserController : ControllerBase
     return Ok(new { Message = "User updated successfully!" });
   }
 
-  [HttpDelete("delete")]
+  [Authorize(Policy = "MustBeAdmin")]
+  [HttpDelete("deleteUser")]
   public async Task<IActionResult> Delete()
   {
     var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -72,5 +73,13 @@ public class UserController : ControllerBase
 
     await _userService.DeleteUser(userId);
     return Ok(new { Message = "User deleted successfully!" });
+  }
+
+  [HttpGet("getOrganisationId/{userId:guid}")]
+  public async Task<IActionResult> GetOrganisationId([FromRoute] Guid userId)
+  {
+    var organisationId = await _userService.GetOrganisationId(userId);
+
+    return Ok(new { OrganisationId = organisationId });
   }
 }

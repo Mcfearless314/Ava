@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-login',
@@ -20,24 +21,43 @@ export class LoginComponent {
   loginSuccess = false;
   loginError = false;
 
-  constructor(private authService: AuthService, private tokenService: TokenService) { }
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router) { }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.loginForm.valid) {
       const username = this.loginForm.value.username || '';
       const password = this.loginForm.value.password || '';
 
       this.authService.login(username, password).subscribe({
-        next: (response) => {
-          console.log('Login successful', response);
+        next: async (response) => {
           this.tokenService.setToken(response.token);
-          // Store token or redirect user
           this.loginSuccess = true;
           this.loginError = false;
+
+          const userId = this.tokenService.getUserIdFromToken();
+          if (!userId) {
+            console.error('Invalid token payload');
+            this.loginError = true;
+            return;
+          }
+
+          this.authService.getOrganisationId(userId).subscribe({
+            next: async (organisationId) => {
+              try {
+                await this.router.navigate([`/organisation/${organisationId.organisationId}`]);
+              } catch (err) {
+                console.error('Navigation error:', err);
+                this.loginError = true;
+              }
+            },
+            error: (err) => {
+              console.error('Failed to fetch organisation ID', err);
+              this.loginError = true;
+            }
+          });
         },
         error: (error) => {
           console.error('Login failed', error);
-          // Handle login error
           this.loginError = true;
           this.loginSuccess = false;
         }

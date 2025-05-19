@@ -85,4 +85,16 @@ public class OrganisationService
       throw new Exception("Failed to get admin for organisation.", e);
     }
   }
+
+  public async Task<ICollection<Project>> GetAllProjects(Guid organisationId)
+  {
+    try
+    {
+      return await _organizationRepository.GetAllProjects(organisationId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to get all projects for organisation.", e);
+    }
+  }
 }

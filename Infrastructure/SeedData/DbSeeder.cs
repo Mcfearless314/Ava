@@ -1,4 +1,5 @@
-﻿using Infrastructure;
+﻿using System.Reflection.Metadata;
+using Infrastructure;
 using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,9 +15,11 @@ public static class DbSeeder
 
     context.Database.Migrate();
 
+    var users = new List<User>();
+
     if (!context.Users.Any())
     {
-      var users = new List<User>
+      var usersWithoutOrganisation = new List<User>
       {
         new()
         {
@@ -25,7 +28,8 @@ public static class DbSeeder
           Credentials = new Credentials
           {
             UserId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
-            PasswordHash = "zwDwLi8a97FHEhF6lGjwAQsrta0r3pTZzhKWf8i7Y+hpV2ni5TSX7LjQ7gmkYIFu5/hzcYcoRdtSVZzUvoo+IIJJ6JAZNkus7oBwycAEL+eB6TKVPH1IlnnSMb+mp+NguJqzlDoNij2h3Wn6nR2lJVXpbx+V8NWVAxa4BNmMURw=",
+            PasswordHash =
+              "zwDwLi8a97FHEhF6lGjwAQsrta0r3pTZzhKWf8i7Y+hpV2ni5TSX7LjQ7gmkYIFu5/hzcYcoRdtSVZzUvoo+IIJJ6JAZNkus7oBwycAEL+eB6TKVPH1IlnnSMb+mp+NguJqzlDoNij2h3Wn6nR2lJVXpbx+V8NWVAxa4BNmMURw=",
             Salt = "x+3pm8HUy8xyt5FzPmbLIrhOWT9Y16D6+q0owfVb9kk="
           },
           CreatedAt = DateTime.Now
@@ -37,7 +41,8 @@ public static class DbSeeder
           Credentials = new Credentials
           {
             UserId = Guid.Parse("44444444-4444-4444-4444-444444444444"),
-            PasswordHash = "BjvFBVeAxMYwGAlQqMZwQ56iRd3jVYDVYYAZFxPy6RdAGqhDGTNj53KpbX7nxZCZPVvaS85ooCr7V9bfDYaVvbSX0GeF4Rhx53drEilv5+aWbF0f9BNX2orYuQIpjlOr9JT+j13WST5icU3/3Pk1Q3MMljnXNdmR0/PYgYLXDMU=",
+            PasswordHash =
+              "BjvFBVeAxMYwGAlQqMZwQ56iRd3jVYDVYYAZFxPy6RdAGqhDGTNj53KpbX7nxZCZPVvaS85ooCr7V9bfDYaVvbSX0GeF4Rhx53drEilv5+aWbF0f9BNX2orYuQIpjlOr9JT+j13WST5icU3/3Pk1Q3MMljnXNdmR0/PYgYLXDMU=",
             Salt = "RIjQO/9KMRQ667Q5cw4NLnMOgHnDptburNimhrJ2ksk="
           },
           CreatedAt = DateTime.Now
@@ -49,7 +54,8 @@ public static class DbSeeder
           Credentials = new Credentials
           {
             UserId = Guid.Parse("55555555-5555-5555-5555-555555555555"),
-            PasswordHash = "1e/Wtrzamlo5UQAAtnWV3GzKqZ2DgcxX5P9Yzp8A2kWnaRkH7kpTswplWR1h46ZRvaJEqoEMi8LsAtCvlaiTTtOhK82j34UAd2IXwOPfkY2QtxmvfkErcOYVsM2CspTo4rabr/WmgVFBbVNZKrAo29I+moVNpk65A2B5Rw4ZbEU=",
+            PasswordHash =
+              "1e/Wtrzamlo5UQAAtnWV3GzKqZ2DgcxX5P9Yzp8A2kWnaRkH7kpTswplWR1h46ZRvaJEqoEMi8LsAtCvlaiTTtOhK82j34UAd2IXwOPfkY2QtxmvfkErcOYVsM2CspTo4rabr/WmgVFBbVNZKrAo29I+moVNpk65A2B5Rw4ZbEU=",
             Salt = "UIIZ4kf+uhbGwlUtMlxDeYAJ98Ju/qoFiSyJA5CA4hU="
           },
           CreatedAt = DateTime.Now
@@ -61,7 +67,8 @@ public static class DbSeeder
           Credentials = new Credentials
           {
             UserId = Guid.Parse("66666666-6666-6666-6666-666666666666"),
-            PasswordHash = "gjBjncme6+HJRGy1ja+E/1n2p7FJE5POR27I4NcKFuLZcTi0oB4GecanlDTc3DBT8WRQdpHNxJaF3MPzhB+cD35U3BMaKckrP+LSky/EoADZcfdEFaY396z9b0mv9KipYBzZhHbdtH+63XhjNwKDbhzIBXGolu3sHSFml056H5o=",
+            PasswordHash =
+              "gjBjncme6+HJRGy1ja+E/1n2p7FJE5POR27I4NcKFuLZcTi0oB4GecanlDTc3DBT8WRQdpHNxJaF3MPzhB+cD35U3BMaKckrP+LSky/EoADZcfdEFaY396z9b0mv9KipYBzZhHbdtH+63XhjNwKDbhzIBXGolu3sHSFml056H5o=",
             Salt = "D90cCRK6Q9Q30V1ylC2t+0JiNPjXQYLIk7qhVAZ8ea4="
           },
           CreatedAt = DateTime.Now
@@ -73,13 +80,14 @@ public static class DbSeeder
           Credentials = new Credentials
           {
             UserId = Guid.Parse("77777777-7777-7777-7777-777777777777"),
-            PasswordHash = "BrkK3hZ096lnYE5A/Wuxu0MNb9xDOzcpFCrAVUSU3SZMGuTvmDYkpX8snzxtRmQruLh5GqTexmnqak1Va78DxQip7gdW5YF0+GNWqY//515EAAIgvHTXZTkMwYB1a5T8QBn/EOhDWkKhdIqFbbD6SZZ+mD4M1f81kAKVZdpcJCE=",
+            PasswordHash =
+              "BrkK3hZ096lnYE5A/Wuxu0MNb9xDOzcpFCrAVUSU3SZMGuTvmDYkpX8snzxtRmQruLh5GqTexmnqak1Va78DxQip7gdW5YF0+GNWqY//515EAAIgvHTXZTkMwYB1a5T8QBn/EOhDWkKhdIqFbbD6SZZ+mD4M1f81kAKVZdpcJCE=",
             Salt = "z38n+5PyDOTyQT/WVQKf4LGQCKqi3tm7AMqU/nP+Ix8="
           },
           CreatedAt = DateTime.Now
         },
       };
-
+      users.AddRange(usersWithoutOrganisation);
       context.Users.AddRange(users);
       context.SaveChanges();
     }
@@ -200,8 +208,24 @@ public static class DbSeeder
       };
 
       context.ProjectTasks.AddRange(projectTasks);
+
+      foreach (var user in users)
+      {
+        switch (user.Username)
+        {
+          case "Alice":
+          case "Charlie":
+            user.OrganisationId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+            break;
+          case "Bob":
+          case "Dana":
+          case "Eve":
+            user.OrganisationId = Guid.Parse("22222222-2222-2222-2222-222222222222");
+            break;
+        }
+      }
+
       context.SaveChanges();
     }
-
   }
 }

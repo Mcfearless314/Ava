@@ -1,0 +1,20 @@
+<h2>Welcome to Your Organisation</h2>
+
+<div class="projects">
+  <div
+    *ngFor="let project of projects"
+    class="card"
+    (click)="goToProject(project.projectId)"
+    style="cursor: pointer; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;"
+  >
+    <h3>{{ project.title }}</h3>
+    <p>{{ project.subTitle }}</p>
+  </div>
+</div>
+
+  <div class="users">
+    <h3>Users</h3>
+    <ul>
+      <li *ngFor="let user of users">{{ user.username }}</li>
+    </ul>
+  </div>

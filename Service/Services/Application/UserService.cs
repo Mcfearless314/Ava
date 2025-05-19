@@ -118,4 +118,16 @@ public class UserService
       throw new Exception("Delete failed.", e);
     }
   }
+
+  public async Task<Guid?> GetOrganisationId(Guid userId)
+  {
+    try
+    {
+      return await _userRepository.GetOrganisationId(userId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to get organisation ID.", e);
+    }
+  }
 }
