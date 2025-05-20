@@ -1,3 +1,4 @@
+using System.Data;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 
@@ -6,10 +7,12 @@ namespace Service.Services.Application;
 public class OrganisationService
 {
   private readonly IOrganizationRepository _organizationRepository;
+  private readonly UserService _userService;
 
-  public OrganisationService(IOrganizationRepository organizationRepository)
+  public OrganisationService(IOrganizationRepository organizationRepository, UserService userService)
   {
     _organizationRepository = organizationRepository;
+    _userService = userService;
   }
 
   public async Task<Organisation> CreateOrganisation(string name, Guid userId)
@@ -18,9 +21,9 @@ public class OrganisationService
     {
       return await _organizationRepository.CreateOrganisation(name, userId);
     }
-    catch (Exception e)
+    catch (DuplicateNameException e)
     {
-      throw new Exception("Failed to create organisation.", e);
+      throw new DuplicateNameException("Organisation with this name already exists");
     }
   }
 
@@ -32,7 +35,7 @@ public class OrganisationService
     }
     catch (Exception e)
     {
-      throw new Exception("Failed to update organisation.", e);
+      throw new Exception("Failed to update organisation.");
     }
   }
 
@@ -48,24 +51,39 @@ public class OrganisationService
     }
   }
 
-  public async Task<string> AddUserToOrganisation(Guid userId, Guid organisationId)
+  public async Task<(string username, Guid userId)> AddUserToOrganisation(string username, Guid organisationId)
   {
+    var user = await _userService.GetUserByUsername(username);
+    if (user == null)
+    {
+      throw new KeyNotFoundException("User not found");
+    }
+
     try
     {
-      var response = await _organizationRepository.AddUserToOrganisation(userId, organisationId);
-      return $"User {response[0]} has been added to organisation {response[1]}";
+      return await _organizationRepository.AddUserToOrganisation(user.Id, organisationId);
     }
     catch (Exception e)
     {
-      throw new Exception("Failed to add user to organisation.", e);
+      if (e is KeyNotFoundException)
+      {
+        throw new KeyNotFoundException("User not found");
+      }
+      throw new Exception(e.Message);
     }
   }
 
-  public async Task<string> RemoveUserFromOrganisation(Guid userId, Guid organisationId)
+  public async Task<string> RemoveUserFromOrganisation(string username, Guid organisationId)
   {
+    var user = await _userService.GetUserByUsername(username);
+    if (user == null)
+    {
+      throw new KeyNotFoundException("User not found");
+    }
+
     try
     {
-      var response = await _organizationRepository.RemoveUserFromOrganisation(userId, organisationId);
+      var response = await _organizationRepository.RemoveUserFromOrganisation(user.Id, organisationId);
       return $"User {response[0]} has been removed from organisation {response[1]}";
     }
     catch (Exception e)

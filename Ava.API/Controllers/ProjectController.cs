@@ -22,7 +22,12 @@ public class ProjectController : ControllerBase
   public async Task<IActionResult> CreateProject([FromBody] CreateProjectDto dto)
   {
     var project = await _projectService.CreateProject(dto.Title, dto.SubTitle, dto.OrganisationId, dto.ProjectManagerId);
-    return Ok(project);
+    return Ok(new ProjectDto
+    {
+      ProjectId = project.Id,
+      Title = project.Title,
+      SubTitle = project.Subtitle
+    });
   }
 
   [Authorize(Policy = "MustBeAdmin")]
@@ -30,7 +35,12 @@ public class ProjectController : ControllerBase
   public async Task<IActionResult> UpdateProject(Guid projectId, [FromBody] CreateProjectDto dto)
   {
     var project = await _projectService.UpdateProject(projectId, dto.Title, dto.SubTitle, Guid.NewGuid());
-    return Ok(project);
+    return Ok(new ProjectDto
+    {
+      ProjectId = project.Id,
+      Title = project.Title,
+      SubTitle = project.Subtitle
+    });
   }
 
   [Authorize(Policy = "MustBeAdmin")]

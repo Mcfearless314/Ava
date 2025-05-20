@@ -3,6 +3,7 @@ using System.Text;
 using Ava.API.Authorization;
 using Ava.API.Authorization.Policies;
 using Ava.API.Configuration;
+using Ava.API.Middleware;
 using Infrastructure.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -124,6 +125,7 @@ public static class Program
     }
 
     app.UseHttpsRedirection();
+    app.UseMiddleware<GlobalExceptionHandler>();
 
     app.UseAuthentication();
     app.UseAuthorization();

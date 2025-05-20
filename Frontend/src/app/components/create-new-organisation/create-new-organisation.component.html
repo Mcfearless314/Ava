@@ -1,0 +1,13 @@
+<div class="create-organisation-container">
+  <h2>Create a New Organisation</h2>
+
+  <div>
+    <label for="orgName">Organisation Name:</label>
+    <input id="orgName" [(ngModel)]="organisationName" placeholder="Enter name" />
+  </div>
+
+  <button (click)="createOrganisation()">Create Organisation</button>
+
+  <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+</div>

@@ -10,7 +10,7 @@ public interface IOrganizationRepository
 
   public Task DeleteOrganisation(Guid organisationId);
 
-  public Task<string[]> AddUserToOrganisation(Guid userId, Guid organisationId);
+  public Task<(string username, Guid userId)> AddUserToOrganisation(Guid userId, Guid organisationId);
 
   public Task<string[]> RemoveUserFromOrganisation(Guid userId, Guid organisationId);
 

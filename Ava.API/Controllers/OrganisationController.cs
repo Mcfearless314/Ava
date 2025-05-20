@@ -1,5 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System.Data;
+using System.Security.Claims;
 using Ava.API.DataTransferObjects;
+using Infrastructure.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services.Application;
@@ -19,15 +21,16 @@ public class OrganisationController : ControllerBase
   }
 
   [HttpPost("create")]
-  public async Task<IActionResult> CreateOrganisation([FromBody] string organisationName)
+  public async Task<IActionResult> CreateOrganisation([FromBody] CreateOrganisationDto organisationDto)
   {
     var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
     {
       return Unauthorized();
     }
-    var organisation = await _organisationService.CreateOrganisation(organisationName, userId);
-    return Ok($"Organisation {organisation.Name} created successfully!");
+    var organisation = await _organisationService.CreateOrganisation(organisationDto.Name, userId);
+    return Ok(new
+      { organisationId = organisation.Id, message = $"Organisation {organisation.Name} created successfully!" });
   }
 
   [Authorize(Policy = "MustBeAdmin")]
@@ -50,14 +53,20 @@ public class OrganisationController : ControllerBase
   [HttpPost("addUser")]
   public async Task<IActionResult> AddUserToOrganisation([FromBody] AddOrRemoveUserFromOrganisationDto dto)
   {
-    return Ok(await _organisationService.AddUserToOrganisation(dto.UserId, dto.OrganisationId));
+    var user = await _organisationService.AddUserToOrganisation(dto.Username, dto.OrganisationId);
+    var userDto = new UserDto
+    {
+      Id = user.userId,
+      Username = user.username,
+    };
+    return Ok(userDto);
   }
 
   [Authorize(Policy = "MustBeAdmin")]
   [HttpDelete("removeUser")]
   public async Task<IActionResult> RemoveUserFromOrganisation([FromBody] AddOrRemoveUserFromOrganisationDto dto)
   {
-    return Ok(await _organisationService.RemoveUserFromOrganisation(dto.UserId, dto.OrganisationId));
+    return Ok(await _organisationService.RemoveUserFromOrganisation(dto.Username, dto.OrganisationId));
   }
 
   [Authorize(Policy = "MustBePartOfOrganisation")]

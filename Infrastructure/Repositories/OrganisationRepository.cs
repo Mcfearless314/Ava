@@ -1,3 +1,4 @@
+using System.Data;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
@@ -15,12 +16,24 @@ public class OrganisationRepository : IOrganizationRepository
 
   public async Task<Organisation> CreateOrganisation(string name, Guid userId)
   {
+    var existingOrganisation = await _context.Organisations
+      .FirstOrDefaultAsync(o => o.Name == name);
+
+    if (existingOrganisation != null)
+    {
+      throw new DuplicateNameException("Organisation with this name already exists");
+    }
+
     var organisation = new Organisation
     {
       Name = name,
       Id = Guid.NewGuid(),
       AdminUserId = userId,
     };
+
+    var user = await _context.Users
+      .FirstOrDefaultAsync(u => u.Id == userId);
+    if (user != null) user.OrganisationId = organisation.Id;
 
     await _context.Organisations.AddAsync(organisation);
     await _context.SaveChangesAsync();
@@ -54,25 +67,35 @@ public class OrganisationRepository : IOrganizationRepository
     await _context.SaveChangesAsync();
   }
 
-  public async Task<string[]> AddUserToOrganisation(Guid userId, Guid organisationId)
+  public async Task<(string username, Guid userId)> AddUserToOrganisation(Guid userId, Guid organisationId)
   {
-    var user = await _context.Users
-      .FirstOrDefaultAsync(u => u.Id == userId);
+    var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
     if (user == null)
     {
-      throw new Exception("User not found");
+      throw new KeyNotFoundException("User not found");
     }
+
+    if (user.OrganisationId == organisationId)
+    {
+      throw new Exception("User already belongs to this organisation");
+    }
+
+    if (user.OrganisationId != null)
+    {
+      throw new Exception("User already belongs to an organisation");
+    }
+
 
     var organisation = await _context.Organisations
       .FirstOrDefaultAsync(o => o.Id == organisationId);
     if (organisation == null)
     {
-      throw new Exception("Organisation not found");
+      throw new KeyNotFoundException("Organisation not found");
     }
 
     user.OrganisationId = organisationId;
     await _context.SaveChangesAsync();
-    return [user.Username, organisation.Name];
+    return (user.Username, user.Id);
   }
 
   public async Task<string[]> RemoveUserFromOrganisation(Guid userId, Guid organisationId)

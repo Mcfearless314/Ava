@@ -1,0 +1,28 @@
+.create-organisation-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+input {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+}
+
+button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.success {
+  color: green;
+  margin-top: 1rem;
+}
+
+.error {
+  color: red;
+  margin-top: 1rem;
+}

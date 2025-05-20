@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Security.Authentication;
 using System.Text.Json;
+using Ava.API.CustomExceptions;
 
 namespace Ava.API.Middleware;
 
@@ -35,17 +37,24 @@ public class GlobalExceptionHandler
     http.Response.ContentType = "application/json";
     logger.LogError(exception, "{ExceptionMessage}", exception.Message);
 
-    if (exception is ValidationException ||
-        exception is ArgumentException ||
-        exception is ArgumentNullException ||
-        exception is ArgumentOutOfRangeException ||
-        exception is InvalidCredentialException)
+    if (exception is ValidationException or
+        ArgumentException or
+        ArgumentNullException or
+        ArgumentOutOfRangeException or
+        InvalidCredentialException or
+        DuplicateNameException or
+        UserNotFoundException or
+        UserIsPartOfAnotherOrganisationException)
     {
       http.Response.StatusCode = StatusCodes.Status400BadRequest;
     }
     else if (exception is KeyNotFoundException)
     {
       http.Response.StatusCode = StatusCodes.Status404NotFound;
+    }
+    else if (exception.Message.Contains("already belongs"))
+    {
+      http.Response.StatusCode = StatusCodes.Status409Conflict;
     }
     else if (exception is AuthenticationException)
     {
@@ -58,7 +67,6 @@ public class GlobalExceptionHandler
     else
     {
       http.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
     }
 
     var result = JsonSerializer.Serialize(new

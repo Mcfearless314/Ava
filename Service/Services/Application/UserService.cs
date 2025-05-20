@@ -19,7 +19,7 @@ public class UserService
   {
     try
     {
-      var userWithCredentials = await _userRepository.GetUserByUsername(username);
+      var userWithCredentials = await _userRepository.CheckIfUserExistsByUsername(username);
 
       if (userWithCredentials)
       {
@@ -37,6 +37,7 @@ public class UserService
       {
         throw;
       }
+
       throw new Exception("Registration failed.", ex);
     }
   }
@@ -129,5 +130,10 @@ public class UserService
     {
       throw new Exception("Failed to get organisation ID.", e);
     }
+  }
+
+  public async Task<User?> GetUserByUsername(string username)
+  {
+    return await _userRepository.GetUserByUsername(username);
   }
 }
