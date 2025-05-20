@@ -12,7 +12,7 @@ public interface IUserRepository
 
   public Task<User> GetUserById(Guid userId);
 
-  public Task<bool> GetUserByUsername(string username);
+  public Task<bool> CheckIfUserExistsByUsername(string username);
 
   public Task<User?> GetUserWithCredentialsByUsername(string username);
 
@@ -21,4 +21,6 @@ public interface IUserRepository
   public Task DeleteUser(Guid userId);
 
   Task<Guid?> GetOrganisationId(Guid userId);
+
+  Task<User> GetUserByUsername(string username);
 }

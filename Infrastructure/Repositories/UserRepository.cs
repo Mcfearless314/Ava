@@ -65,7 +65,7 @@ public class UserRepository : IUserRepository
     return user;
   }
 
-  public async Task<bool> GetUserByUsername(string username)
+  public async Task<bool> CheckIfUserExistsByUsername(string username)
   {
     return await _context.Users
       .AnyAsync(u => u.Username == username);
@@ -108,5 +108,12 @@ public class UserRepository : IUserRepository
     var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
     var organisationId = user?.OrganisationId;
     return organisationId;
+  }
+
+  public async Task<User?> GetUserByUsername(string username)
+  {
+    var user = await _context.Users
+      .FirstOrDefaultAsync(u => u.Username == username);
+    return user;
   }
 }

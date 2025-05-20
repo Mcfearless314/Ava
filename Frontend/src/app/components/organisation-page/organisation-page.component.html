@@ -1,20 +1,46 @@
 <h2>Welcome to Your Organisation</h2>
+<div class="organisation-container">
+    <div class="projects">
+        <div
+                *ngFor="let project of projects"
+                class="card"
+                (click)="goToProject(project.projectId)"
+                style="cursor: pointer; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;"
+        >
+            <h3>{{ project.title }}</h3>
+            <p>{{ project.subTitle }}</p>
+        </div>
 
-<div class="projects">
-  <div
-    *ngFor="let project of projects"
-    class="card"
-    (click)="goToProject(project.projectId)"
-    style="cursor: pointer; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;"
-  >
-    <h3>{{ project.title }}</h3>
-    <p>{{ project.subTitle }}</p>
-  </div>
+        <div class="add-project">
+            <input type="text" [(ngModel)]="newProjectTitle" placeholder="Project Title"/>
+            <input type="text" [(ngModel)]="newProjectSubTitle" placeholder="Project Subtitle"/>
+            <p style="margin:0;">Select a Manager</p>
+            <select [(ngModel)]="selectedManager">
+                <option *ngFor="let manager of managers" [value]="manager.id">
+                    {{ manager.username }}
+                </option>
+            </select>
+            <button (click)="goToCreateProject()" class="btn btn-primary">
+                Add Project
+            </button>
+
+        </div>
+    </div>
+
+    <div class="users">
+        <h3>Organisation Users</h3>
+        <ul>
+            <li *ngFor="let user of users">{{ user.username }}</li>
+        </ul>
+        <div class="add-user">
+            <input type="text" [(ngModel)]="newUserUsername" placeholder="User's username"/>
+            <button (click)="addUser()" class="btn btn-primary">
+                Add User
+            </button>
+            <div *ngIf="errorMessage" style="color: red; margin-top: 0.5rem;">
+                {{ errorMessage }}
+            </div>
+        </div>
+
+    </div>
 </div>
-
-  <div class="users">
-    <h3>Users</h3>
-    <ul>
-      <li *ngFor="let user of users">{{ user.username }}</li>
-    </ul>
-  </div>

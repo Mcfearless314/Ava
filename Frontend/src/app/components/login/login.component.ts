@@ -42,9 +42,13 @@ export class LoginComponent {
           }
 
           this.authService.getOrganisationId(userId).subscribe({
-            next: async (organisationId) => {
+            next: async (organisation) => {
               try {
-                await this.router.navigate([`/organisation/${organisationId.organisationId}`]);
+                if(!organisation || !organisation.organisationId) {
+                  await this.router.navigate(['/organisation/createNewOrganisation']);
+                } else {
+                  await this.router.navigate([`/organisation/${organisation.organisationId}`]);
+                }
               } catch (err) {
                 console.error('Navigation error:', err);
                 this.loginError = true;

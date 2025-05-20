@@ -1,10 +1,26 @@
-.container {
+.organisation-container {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 2rem;
   gap: 2rem;
-  padding: 1rem;
 }
 
-.projects, .users {
+.add-project {
+  border: solid 1px #ddd;
+  padding: 1rem;
+  display: flex;
+  border-radius: 8px;
+  flex-direction: column;
+  max-width: 200px;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+.projects{
+  flex: 2;
+}
+
+.users {
   flex: 1;
 }
 
