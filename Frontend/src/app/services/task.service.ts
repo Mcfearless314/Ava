@@ -19,4 +19,16 @@ export class TaskService {
       null
     );
   }
+
+  addTask(projectId: string, newTaskTitle: string, newTaskBody: string): Observable<ProjectTask> {
+    return this.http.post<ProjectTask>(
+      `/api/ProjectTask/create`
+      , {
+        title: newTaskTitle,
+        body: newTaskBody,
+        status: 1,
+        projectId: projectId,
+      }
+    )
+  }
 }

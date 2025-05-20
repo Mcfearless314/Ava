@@ -79,4 +79,12 @@ public class OrganisationController : ControllerBase
 
     return Ok(projectDtos);
   }
+
+  [Authorize(Policy = "MustBeProjectUser")]
+  [HttpGet("getOrganisationByProject/{projectId:guid}")]
+  public async Task<IActionResult> GetOrganisationByProject([FromRoute] Guid projectId)
+  {
+    var organisationId = await _organisationService.GetOrganisationByProject(projectId);
+    return Ok(organisationId);
+  }
 }

@@ -10,6 +10,6 @@ public class ProjectUser
 public enum ProjectRoles
 {
   ProjectManager = 1,
-  Contributer = 2
+  Contributor = 2
 }
 

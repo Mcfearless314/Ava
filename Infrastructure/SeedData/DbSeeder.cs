@@ -157,7 +157,7 @@ public static class DbSeeder
         {
           ProjectId = Guid.Parse("99999999-9999-9999-9999-999999999999"),
           UserId = Guid.Parse("77777777-7777-7777-7777-777777777777"),
-          Role = ProjectRoles.Contributer,
+          Role = ProjectRoles.Contributor,
         },
       };
 

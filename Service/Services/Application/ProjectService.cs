@@ -100,7 +100,30 @@ public class ProjectService
     }
     catch (Exception e)
     {
-      throw new Exception("Failed to retrieve project, e");
+      throw new Exception("Failed to retrieve project");
+    }
+  }
+
+  public async Task<object> CheckUserAccessToProject(Guid projectId, Guid userId)
+  {
+    var users = await _userService.GetUsersByProject(projectId);
+    return users.Select(u => u.Id).Contains(userId) ? new { HasAccess = true } : new { HasAccess = false };
+  }
+
+  public async Task<User> AddUserToProject(Guid userId, Guid projectId)
+  {
+    try
+    {
+      var users = await _userService.GetUsersByProject(projectId);
+      if (users.Select(u => u.Id).Contains(userId))
+      {
+        throw new Exception("User already exists in the project.");
+      }
+      return await _projectRepository.AddUserToProject(userId, projectId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to add user to project.", e);
     }
   }
 }

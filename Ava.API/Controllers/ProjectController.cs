@@ -21,7 +21,8 @@ public class ProjectController : ControllerBase
   [HttpPost("create")]
   public async Task<IActionResult> CreateProject([FromBody] CreateProjectDto dto)
   {
-    var project = await _projectService.CreateProject(dto.Title, dto.SubTitle, dto.OrganisationId, dto.ProjectManagerId);
+    var project =
+      await _projectService.CreateProject(dto.Title, dto.SubTitle, dto.OrganisationId, dto.ProjectManagerId);
     return Ok(new ProjectDto
     {
       ProjectId = project.Id,
@@ -77,5 +78,30 @@ public class ProjectController : ControllerBase
   {
     await _projectService.RemoveUserFromProject(userId, projectId, Guid.NewGuid());
     return Ok(new { Message = "User removed from project successfully!" });
+  }
+
+  [Authorize(Policy = "MustBeProjectManager")]
+  [HttpPost("addUserToProject/{projectId}/{userId}")]
+  public async Task<IActionResult> AddUserToProject([FromRoute] Guid userId, [FromRoute] Guid projectId)
+  {
+    var user = await _projectService.AddUserToProject(userId, projectId);
+    var userDto = new UserDto
+    {
+      Id = user.Id,
+      Username = user.Username
+    };
+    return Ok(userDto);
+  }
+
+  [HttpGet("checkAccess/{projectId}/{userId}")]
+  public async Task<IActionResult> CheckAccess([FromRoute] Guid projectId, [FromRoute] Guid userId)
+  {
+    if (projectId == Guid.Empty || userId == Guid.Empty)
+    {
+      return BadRequest("Project ID and User ID cannot be empty.");
+    }
+
+    var hasAccess = await _projectService.CheckUserAccessToProject(projectId, userId);
+    return Ok(hasAccess);
   }
 }

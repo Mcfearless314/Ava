@@ -17,4 +17,5 @@ public interface IOrganizationRepository
   Task<User> GetAdminForOrganisation(Guid organisationId);
 
   Task<ICollection<Project>> GetAllProjects(Guid organisationId);
+  Task<Guid> GetOrganisationByProject(Guid projectId);
 }

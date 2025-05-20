@@ -115,4 +115,16 @@ public class OrganisationService
       throw new Exception("Failed to get all projects for organisation.", e);
     }
   }
+
+  public async Task<Guid> GetOrganisationByProject(Guid projectId)
+  {
+    try
+    {
+      return await _organizationRepository.GetOrganisationByProject(projectId);
+    }
+    catch (Exception e)
+    {
+      throw new KeyNotFoundException("Organisation Not Found", e);
+    }
+  }
 }

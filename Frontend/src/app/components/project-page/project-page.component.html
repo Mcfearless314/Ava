@@ -20,4 +20,31 @@
     </div>
   </div>
   </div>
+
+  <div class="add-task-and-users-container">
+  <div class="add-task">
+    <input type="text" [(ngModel)]="newTaskTitle" placeholder="Task Title">
+    <textarea [(ngModel)]="newTaskBody" placeholder="Task Body"></textarea>
+    <button (click)="addTask()">Add Task</button>
+  </div>
+
+  <div class="users-on-project">
+  <h3 class="project-users-header">Project Users</h3>
+  <ul>
+    <li *ngFor="let user of users">{{ user.username }}</li>
+  </ul>
+    <div class="add-user">
+      <select [(ngModel)]="selectedUser">
+        <option *ngFor="let user of availableUsers" [value]="user.id">
+          {{ user.username }}
+        </option>
+      </select>
+      <button (click)="addUser()" class="btn btn-primary">
+        Add User
+      </button>
+    </div>
+
+
+  </div>
+  </div>
 </div>
