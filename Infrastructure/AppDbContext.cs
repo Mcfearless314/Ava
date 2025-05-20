@@ -121,8 +121,6 @@ public class AppDbContext : DbContext
         .WithOne()
         .HasForeignKey<Credentials>(c => c.UserId)
         .OnDelete(DeleteBehavior.Cascade);
-
-
     });
 
     // Configuration for UserActionsLog entity
@@ -134,8 +132,6 @@ public class AppDbContext : DbContext
       ent.Property(ual => ual.ActionPerformedAt).IsRequired();
       ent.Property(ual => ual.Description).IsRequired().HasMaxLength(500);
       ent.Property(ual => ual.ActionUser).IsRequired();
-
-
     });
   }
 }

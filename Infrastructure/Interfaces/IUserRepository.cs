@@ -19,4 +19,6 @@ public interface IUserRepository
   public Task<User> UpdateUser(Guid userId, string username, string salt, string passwordHash);
 
   public Task DeleteUser(Guid userId);
+
+  Task<Guid?> GetOrganisationId(Guid userId);
 }

@@ -59,4 +59,15 @@ public class OrganisationController : ControllerBase
   {
     return Ok(await _organisationService.RemoveUserFromOrganisation(dto.UserId, dto.OrganisationId));
   }
+
+  [Authorize(Policy = "MustBePartOfOrganisation")]
+  [HttpGet("getAllProjects/{organisationId:guid}")]
+  public async Task<IActionResult> GetAllProjects(Guid organisationId)
+  {
+    var projects = await _organisationService.GetAllProjects(organisationId);
+    var projectDtos = projects.Select(project => new ProjectDto()
+      { ProjectId = project.Id, Title = project.Title, SubTitle = project.Subtitle, }).ToList();
+
+    return Ok(projectDtos);
+  }
 }

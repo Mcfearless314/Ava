@@ -6,6 +6,9 @@ export interface LoginResponse {
   message: string;
   token: string;
 }
+export interface OrganisationResponse {
+  organisationId: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +24,9 @@ export class AuthService {
 
   register(username: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/register`, { username, password });
+  }
+
+  getOrganisationId(userId: string): Observable<OrganisationResponse> {
+    return this.http.get<OrganisationResponse>(`/api/User/getOrganisationId/${userId}`);
   }
 }

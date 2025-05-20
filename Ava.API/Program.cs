@@ -92,11 +92,17 @@ public static class Program
 
       options.AddPolicy("MustBeAdminOrProjectUser",
         policy => { policy.Requirements.Add(new MustBeAdminOrProjectUserRequirement()); });
+
+      options.AddPolicy("MustBePartOfOrganisation",
+        policy => { policy.Requirements.Add(new MustBePartOfOrganisationRequirement()); });
     });
+
+    builder.Services.AddScoped<IAuthorizationHandler, MustBePartOfOrganisationHandler>();
 
     builder.Services.AddScoped<IAuthorizationHandler, MustBeProjectManagerHandler>();
     builder.Services.AddScoped<IAuthorizationHandler, MustBeAdminHandler>();
     builder.Services.AddScoped<IAuthorizationHandler, MustBeProjectUserHandler>();
+
 
     builder.Services.AddScoped<MustBeProjectUserHandler>();
     builder.Services.AddScoped<MustBeAdminHandler>();

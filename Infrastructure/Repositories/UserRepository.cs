@@ -12,6 +12,7 @@ public class UserRepository : IUserRepository
   {
     _context = context;
   }
+
   public async Task Register(string username, string passwordHash, string salt)
   {
     var userId = Guid.NewGuid();
@@ -50,7 +51,7 @@ public class UserRepository : IUserRepository
       .Select(pu => pu.UserId)
       .ToListAsync();
 
-    if(!userIds.Any()) throw new KeyNotFoundException();
+    if (!userIds.Any()) throw new KeyNotFoundException();
 
     return await _context.Users
       .Where(u => userIds.Contains(u.Id))
@@ -60,7 +61,7 @@ public class UserRepository : IUserRepository
   public async Task<User> GetUserById(Guid userId)
   {
     var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-    if(user == null) throw new KeyNotFoundException();
+    if (user == null) throw new KeyNotFoundException();
     return user;
   }
 
@@ -83,7 +84,7 @@ public class UserRepository : IUserRepository
       .Include(u => u.Credentials)
       .FirstOrDefaultAsync(u => u.Id == userId);
 
-    if(existingUser == null) throw new KeyNotFoundException();
+    if (existingUser == null) throw new KeyNotFoundException();
 
     existingUser.Username = username;
     existingUser.Credentials.PasswordHash = passwordHash;
@@ -97,8 +98,15 @@ public class UserRepository : IUserRepository
   public Task DeleteUser(Guid userId)
   {
     var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-    if(user == null) throw new KeyNotFoundException();
+    if (user == null) throw new KeyNotFoundException();
     _context.Users.Remove(user);
     return _context.SaveChangesAsync();
+  }
+
+  public async Task<Guid?> GetOrganisationId(Guid userId)
+  {
+    var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+    var organisationId = user?.OrganisationId;
+    return organisationId;
   }
 }
