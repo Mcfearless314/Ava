@@ -7,6 +7,7 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class UserService {
+  private userIds: string[] = [];
 
   constructor(private http: HttpClient) {
   }
@@ -16,5 +17,10 @@ export class UserService {
       `/api/Organisation/addUser`,
       { organisationId, userName }
     );
+  }
+
+
+  getUsersForProject(projectId: string): Observable<User[]> {
+    return this.http.get<User[]>(`/api/User/getUsersByProject/${projectId}`);
   }
 }

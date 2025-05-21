@@ -7,9 +7,11 @@ public class ProjectService
 {
   private readonly IProjectRepository _projectRepository;
   private readonly UserService _userService;
+  private readonly OrganisationService _organisationService;
 
-  public ProjectService(IProjectRepository projectRepository, UserService userService)
+  public ProjectService(IProjectRepository projectRepository, UserService userService, OrganisationService organisationService)
   {
+    _organisationService = organisationService;
     _projectRepository = projectRepository;
     _userService = userService;
   }
@@ -100,7 +102,37 @@ public class ProjectService
     }
     catch (Exception e)
     {
-      throw new Exception("Failed to retrieve project, e");
+      throw new Exception("Failed to retrieve project");
+    }
+  }
+
+  public async Task<object> CheckUserAccessToProject(Guid projectId, Guid userId)
+  {
+    var organisationId = await _organisationService.GetOrganisationByProject(projectId);
+    var adminUser = await _organisationService.GetAdminForOrganisation(organisationId);
+    if (adminUser.Id == userId)
+    {
+      return new { HasAccess = true };
+    }
+
+    var users = await _userService.GetUsersByProject(projectId);
+    return users.Select(u => u.Id).Contains(userId) ? new { HasAccess = true } : new { HasAccess = false };
+  }
+
+  public async Task<User> AddUserToProject(Guid userId, Guid projectId)
+  {
+    try
+    {
+      var users = await _userService.GetUsersByProject(projectId);
+      if (users.Select(u => u.Id).Contains(userId))
+      {
+        throw new Exception("User already exists in the project.");
+      }
+      return await _projectRepository.AddUserToProject(userId, projectId);
+    }
+    catch (Exception e)
+    {
+      throw new Exception("Failed to add user to project.", e);
     }
   }
 }

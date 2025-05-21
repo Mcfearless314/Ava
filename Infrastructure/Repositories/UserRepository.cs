@@ -47,11 +47,11 @@ public class UserRepository : IUserRepository
   public async Task<List<User>> GetUsersByProject(Guid projectId)
   {
     var userIds = await _context.ProjectUsers
-      .Where(pu => pu.ProjectId.ToString() == projectId.ToString())
+      .Where(pu => pu.ProjectId == projectId)
       .Select(pu => pu.UserId)
       .ToListAsync();
 
-    if (!userIds.Any()) throw new KeyNotFoundException();
+    if (userIds.Count == 0) throw new KeyNotFoundException();
 
     return await _context.Users
       .Where(u => userIds.Contains(u.Id))

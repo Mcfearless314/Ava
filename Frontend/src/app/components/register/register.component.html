@@ -1,18 +1,42 @@
+
+<div class="register-container">
 <p>Register</p>
-
 <form id="registerForm" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div>
   <label for="username">Username: </label>
-  <input id="username" name="username" type="text" formControlName="username" required />
-
+  <input name="username" type="text" formControlName="username" required />
+  </div>
+  <div>
   <label for="password">Password: </label>
-  <input id="password" name="password" type="password" formControlName="password" required />
+  <input name="password" type="password" formControlName="password" required />
+</div>
+  <div>
+    <label for="password">Confirm Password: </label>
+    <input name="password" type="password" formControlName="confirmPassword" required />
+  </div>
 
+  <div *ngIf="hasPasswordMismatchError()" class="register-error-message">
+    Passwords do not match
+  </div>
   <button type="submit">Submit</button>
 </form>
-
-<div *ngIf="registerSuccess" class="success-message">
-  Registration successful! You can now log in.
 </div>
-<div *ngIf="registerError" class="error-message">
-  Registration failed. Please try again.
+<div *ngIf="registerError" class="register-error-message">
+  Registration failed.
+  Please check the password, it must meet the following criteria:
+  <li>
+    must be at least 8 characters long
+  </li>
+  <li>
+    must contain at least one uppercase letter
+  </li>
+  <li>
+    must contain at least one lowercase letter
+  </li>
+  <li>
+    must contain at least one digit
+  </li>
+  <li>
+    must contain at least one special character
+  </li>
 </div>

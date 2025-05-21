@@ -82,6 +82,10 @@ public class UserService
     }
     catch (Exception e)
     {
+      if (e is KeyNotFoundException)
+      {
+        return new List<User>();
+      }
       throw new Exception("Failed to get users by project.", e);
     }
   }

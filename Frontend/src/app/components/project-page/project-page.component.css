@@ -28,3 +28,43 @@
   box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
   cursor: grab;
 }
+
+.add-task{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 200px;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.users-on-project{
+  display: flex;
+  flex-direction: column;
+}
+
+.project-users-header{
+  margin:0;
+  padding-right: 20px;
+}
+
+.add-task-and-users-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.add-user {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 200px;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+}

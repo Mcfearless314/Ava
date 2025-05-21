@@ -118,4 +118,34 @@ public class ProjectRepository : IProjectRepository
     if(project == null) throw new KeyNotFoundException();
     return project;
   }
+
+  public async Task<User> AddUserToProject(Guid userId, Guid projectId)
+  {
+    var project = await _context.Projects
+      .Include(p => p.ProjectUsers)
+      .FirstOrDefaultAsync(p => p.Id == projectId);
+
+    if (project == null) throw new Exception("Project not found");
+
+    var user = await _context.Users
+      .FirstOrDefaultAsync(u => u.Id == userId);
+
+    if (user == null) throw new Exception("User not found");
+
+    var projectUser = await _context.ProjectUsers
+      .FirstOrDefaultAsync(pu => pu.UserId == userId && pu.ProjectId == projectId);
+
+    if (projectUser != null) throw new Exception("User already in project");
+
+    projectUser = new ProjectUser
+    {
+      UserId = userId,
+      ProjectId = projectId,
+      Role = ProjectRoles.Contributor
+    };
+
+    await _context.ProjectUsers.AddAsync(projectUser);
+    await _context.SaveChangesAsync();
+    return user;
+  }
 }

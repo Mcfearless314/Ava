@@ -1,0 +1,7 @@
+.register-error-message {
+   color: red;
+}
+.register-container {
+  display: flex;
+  flex-direction: column;
+}
