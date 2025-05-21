@@ -20,7 +20,7 @@
                     {{ manager.username }}
                 </option>
             </select>
-            <button (click)="goToCreateProject()" class="btn btn-primary">
+            <button (click)="createProject()" class="btn btn-primary">
                 Add Project
             </button>
 
@@ -37,9 +37,6 @@
             <button (click)="addUser()" class="btn btn-primary">
                 Add User
             </button>
-            <div *ngIf="errorMessage" style="color: red; margin-top: 0.5rem;">
-                {{ errorMessage }}
-            </div>
         </div>
 
     </div>

@@ -149,4 +149,17 @@ public class OrganisationRepository : IOrganizationRepository
 
     return organisation.Projects;
   }
+
+  public Task<Guid> GetOrganisationByProject(Guid projectId)
+  {
+    var organisationId = _context.Projects
+      .Where(p => p.Id == projectId)
+      .Select(p => p.OrganisationId)
+      .FirstOrDefaultAsync();
+    if (organisationId == null)
+    {
+      throw new KeyNotFoundException("Organisation not found");
+    }
+    return organisationId;
+  }
 }

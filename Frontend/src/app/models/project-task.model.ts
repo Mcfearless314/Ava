@@ -1,7 +1,7 @@
 export class ProjectTask {
   id!: string;
   title!: string;
-  createdAt!: Date;
+  createdAt?: Date;
   body!: string;
   status!: number;
   projectId!: string;
