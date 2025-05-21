@@ -54,6 +54,7 @@ public class ProjectController : ControllerBase
 
   [Authorize(Policy = "MustBeAdminOrProjectUser")]
   [HttpGet("tasks/{projectId}")]
+  [Obsolete("This method is deprecated. Use GetAllProjectTasksForProject instead.")]
   public async Task<IActionResult> GetProjectTasks(Guid projectId)
   {
     var tasks = await _projectService.GetProjectTasks(projectId);

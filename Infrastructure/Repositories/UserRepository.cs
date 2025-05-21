@@ -28,7 +28,7 @@ public class UserRepository : IUserRepository
     {
       Id = userId,
       Username = username,
-      CreatedAt = DateTime.UtcNow,
+      CreatedAt = DateTime.Now,
       Credentials = credentials
     };
 

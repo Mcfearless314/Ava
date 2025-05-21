@@ -28,9 +28,9 @@ public class ProjectService
 
       return await _projectRepository.CreateProject(title, subTitle, organisationId, projectManagerId);
     }
-    catch (Exception e)
+    catch (Exception)
     {
-      throw new Exception("Failed to create project.", e);
+      throw new Exception("Failed to create project.");
     }
   }
 
@@ -42,7 +42,7 @@ public class ProjectService
     }
     catch (Exception e)
     {
-      throw new Exception("Failed to update project.", e);
+      throw new Exception("Failed to update project.");
     }
   }
 
@@ -52,9 +52,9 @@ public class ProjectService
     {
       await _projectRepository.DeleteProject(projectId, userId);
     }
-    catch (Exception e)
+    catch (Exception)
     {
-      throw new Exception("Failed to delete project.", e);
+      throw new Exception("Failed to delete project.");
     }
   }
 
@@ -64,9 +64,9 @@ public class ProjectService
     {
       return await _projectRepository.GetProjectTasks(projectId);
     }
-    catch (Exception e)
+    catch (Exception)
     {
-      throw new Exception("Failed to get project tasks.", e);
+      throw new Exception("Failed to get project tasks.");
     }
   }
 
@@ -76,9 +76,9 @@ public class ProjectService
     {
       return await _projectRepository.GetProjectManager(projectId);
     }
-    catch (Exception e)
+    catch (Exception)
     {
-      throw new Exception("Failed to get project manager.", e);
+      throw new Exception("Failed to get project manager.");
     }
   }
 
@@ -88,9 +88,9 @@ public class ProjectService
     {
       await _projectRepository.RemoveUserFromProject(userId, projectId, requesterId);
     }
-    catch (Exception e)
+    catch (Exception)
     {
-      throw new Exception("Failed to remove user from project.", e);
+      throw new Exception("Failed to remove user from project.");
     }
   }
 
@@ -100,7 +100,7 @@ public class ProjectService
     {
       return await _projectRepository.GetProjectById(projectId);
     }
-    catch (Exception e)
+    catch (Exception)
     {
       throw new Exception("Failed to retrieve project");
     }
@@ -130,9 +130,9 @@ public class ProjectService
       }
       return await _projectRepository.AddUserToProject(userId, projectId);
     }
-    catch (Exception e)
+    catch (Exception)
     {
-      throw new Exception("Failed to add user to project.", e);
+      throw new Exception("Failed to add user to project.");
     }
   }
 }

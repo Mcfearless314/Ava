@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service';
+import { ToastService } from '../../services/toast.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -21,7 +22,7 @@ export class LoginComponent {
   loginSuccess = false;
   loginError = false;
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router) { }
+  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private toastService: ToastService) { }
 
   async onSubmit() {
     if (this.loginForm.valid) {
@@ -36,7 +37,6 @@ export class LoginComponent {
 
           const userId = this.tokenService.getUserIdFromToken();
           if (!userId) {
-            console.error('Invalid token payload');
             this.loginError = true;
             return;
           }
@@ -50,20 +50,20 @@ export class LoginComponent {
                   await this.router.navigate([`/organisation/${organisation.organisationId}`]);
                 }
               } catch (err) {
-                console.error('Navigation error:', err);
                 this.loginError = true;
               }
             },
             error: (err) => {
-              console.error('Failed to fetch organisation ID', err);
               this.loginError = true;
             }
           });
         },
         error: (error) => {
-          console.error('Login failed', error);
           this.loginError = true;
           this.loginSuccess = false;
+          if(error.status === 429) {
+            this.toastService.show(error.error.error);
+          }
         }
       });
     }

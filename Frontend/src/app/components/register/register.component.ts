@@ -10,6 +10,8 @@ import {
 } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
 import { TokenService } from "../../services/token.service";
+import { ToastService } from "../../services/toast.service";
+
 
 @Component({
   selector: 'app-register',
@@ -45,7 +47,7 @@ export class RegisterComponent {
       !!this.registerForm.get('confirmPassword')?.touched
     );
   }
-  constructor(private authService: AuthService, private tokenService: TokenService) { }
+  constructor(private authService: AuthService, private tokenService: TokenService, private toastService: ToastService) { }
 
   onSubmit() {
     if (this.registerForm.valid) {
@@ -60,6 +62,7 @@ export class RegisterComponent {
           this.registerError = false;
         },
         error: (error) => {
+          this.toastService.show(error.error.error);
           this.registerError = true;
           this.registerSuccess = false;
         }

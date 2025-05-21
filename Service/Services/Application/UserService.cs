@@ -31,14 +31,14 @@ public class UserService
 
       await _userRepository.Register(username, passwordHash, salt);
     }
-    catch (Exception ex)
+    catch (Exception e)
     {
-      if (ex.Message == "User already exists.")
+      if (e.Message == "User already exists.")
       {
         throw;
       }
 
-      throw new Exception("Registration failed.", ex);
+      throw new Exception("Registration failed.");
     }
   }
 
@@ -68,9 +68,9 @@ public class UserService
     {
       return await _userRepository.GetAllUsers(organisationId);
     }
-    catch (Exception e)
+    catch (Exception)
     {
-      throw new Exception("Failed to get users by organisation.", e);
+      throw new Exception("Failed to get users by organisation.");
     }
   }
 
@@ -86,7 +86,7 @@ public class UserService
       {
         return new List<User>();
       }
-      throw new Exception("Failed to get users by project.", e);
+      throw new Exception("Failed to get users by project.");
     }
   }
 

@@ -136,6 +136,26 @@ public static class Program
           token);
       };
 
+      options.AddPolicy("RegisterLimiter", context =>
+      {
+        var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+        return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
+        {
+          PermitLimit = 5,
+          Window = TimeSpan.FromMinutes(30),
+          QueueLimit = 0
+        });
+      });
+      options.OnRejected = async (context, token) =>
+      {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync(
+          "{\"error\": \"Too many requests. Please wait and try again.\"}",
+          token);
+      };
+
       options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
       {
         var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
