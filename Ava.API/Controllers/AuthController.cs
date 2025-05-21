@@ -20,6 +20,7 @@ public class AuthController : ControllerBase
   }
 
   [HttpPost("register")]
+  [EnableRateLimiting("RegisterLimiter")]
   public async Task<IActionResult> Register([FromBody] CredentialsDto dto)
   {
 
