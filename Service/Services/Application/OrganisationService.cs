@@ -45,9 +45,9 @@ public class OrganisationService
     {
       await _organizationRepository.DeleteOrganisation(organisationId);
     }
-    catch (Exception e)
+    catch (Exception)
     {
-      throw new Exception("Failed to delete organisation.", e);
+      throw new Exception("Failed to delete organisation.");
     }
   }
 
@@ -86,9 +86,9 @@ public class OrganisationService
       var response = await _organizationRepository.RemoveUserFromOrganisation(user.Id, organisationId);
       return $"User {response[0]} has been removed from organisation {response[1]}";
     }
-    catch (Exception e)
+    catch (Exception)
     {
-      throw new Exception("Failed to remove user from organisation.", e);
+      throw new Exception("Failed to remove user from organisation.");
     }
   }
 
@@ -98,9 +98,9 @@ public class OrganisationService
     {
       return await _organizationRepository.GetAdminForOrganisation(organisationId);
     }
-    catch (Exception e)
+    catch (Exception)
     {
-      throw new Exception("Failed to get admin for organisation.", e);
+      throw new Exception("Failed to get admin for organisation.");
     }
   }
 
@@ -110,9 +110,9 @@ public class OrganisationService
     {
       return await _organizationRepository.GetAllProjects(organisationId);
     }
-    catch (Exception e)
+    catch (Exception)
     {
-      throw new Exception("Failed to get all projects for organisation.", e);
+      throw new Exception("Failed to get all projects for organisation.");
     }
   }
 
@@ -124,7 +124,11 @@ public class OrganisationService
     }
     catch (Exception e)
     {
-      throw new KeyNotFoundException("Organisation Not Found", e);
+      if (e is KeyNotFoundException)
+      {
+        throw new KeyNotFoundException("Organisation Not Found");
+      }
+      throw new Exception("Failed to get organisation.");
     }
   }
 }

@@ -61,7 +61,6 @@ public class UserController : ControllerBase
     return Ok(new { Message = "User updated successfully!" });
   }
 
-  [Authorize(Policy = "MustBeAdmin")]
   [HttpDelete("deleteUser")]
   public async Task<IActionResult> Delete()
   {
