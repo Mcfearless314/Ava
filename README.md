@@ -40,4 +40,5 @@ The following users are present in the application:
   -  Charlie
   -  Dana
   -  Eve
+
 The password for each user is "Test1234!" Enjoy!
