@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text;
+using System.Threading.RateLimiting;
 using Ava.API.Authorization;
 using Ava.API.Authorization.Policies;
 using Ava.API.Configuration;
@@ -7,6 +8,7 @@ using Ava.API.Middleware;
 using Infrastructure.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.Configuration;
@@ -112,6 +114,48 @@ public static class Program
     builder.Services.AddScoped<IAuthorizationHandler, MustBeAdminOrProjectManagerHandler>();
     builder.Services.AddScoped<IAuthorizationHandler, MustBeAdminOrProjectUserHandler>();
 
+    builder.Services.AddRateLimiter(options =>
+    {
+      options.AddPolicy("LoginLimiter", context =>
+      {
+        var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+        return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
+        {
+          PermitLimit = 5,
+          Window = TimeSpan.FromMinutes(1),
+          QueueLimit = 0
+        });
+      });
+      options.OnRejected = async (context, token) =>
+      {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync(
+          "{\"error\": \"Too many requests. Please wait and try again.\"}",
+          token);
+      };
+
+      options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+      {
+        var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
+        {
+          PermitLimit = 25,
+          Window = TimeSpan.FromMinutes(1),
+          QueueLimit = 0
+        });
+      });
+
+      options.OnRejected = async (context, token) =>
+      {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync(
+          "{\"error\": \"Too many requests. Please wait and try again later.\"}",
+          token);
+      };
+    });
 
     var app = builder.Build();
 
@@ -129,6 +173,7 @@ public static class Program
 
     app.UseAuthentication();
     app.UseAuthorization();
+    app.UseRateLimiter();
 
     app.MapControllers();
 

@@ -1,5 +1,6 @@
 ﻿using Ava.API.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Service.Services.Application;
 using Service.Services.Security;
 
@@ -27,6 +28,7 @@ public class AuthController : ControllerBase
   }
 
   [HttpPost("login")]
+  [EnableRateLimiting("LoginLimiter")]
   public async Task<IActionResult> Login([FromBody] CredentialsDto dto)
   {
 
