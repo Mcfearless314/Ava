@@ -80,7 +80,7 @@ public class OrganisationController : ControllerBase
     return Ok(projectDtos);
   }
 
-  [Authorize(Policy = "MustBeProjectUser")]
+  [Authorize(Policy = "MustBeAdminOrProjectUser")]
   [HttpGet("getOrganisationByProject/{projectId:guid}")]
   public async Task<IActionResult> GetOrganisationByProject([FromRoute] Guid projectId)
   {

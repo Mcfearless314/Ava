@@ -7,9 +7,11 @@ public class ProjectService
 {
   private readonly IProjectRepository _projectRepository;
   private readonly UserService _userService;
+  private readonly OrganisationService _organisationService;
 
-  public ProjectService(IProjectRepository projectRepository, UserService userService)
+  public ProjectService(IProjectRepository projectRepository, UserService userService, OrganisationService organisationService)
   {
+    _organisationService = organisationService;
     _projectRepository = projectRepository;
     _userService = userService;
   }
@@ -106,6 +108,13 @@ public class ProjectService
 
   public async Task<object> CheckUserAccessToProject(Guid projectId, Guid userId)
   {
+    var organisationId = await _organisationService.GetOrganisationByProject(projectId);
+    var adminUser = await _organisationService.GetAdminForOrganisation(organisationId);
+    if (adminUser.Id == userId)
+    {
+      return new { HasAccess = true };
+    }
+
     var users = await _userService.GetUsersByProject(projectId);
     return users.Select(u => u.Id).Contains(userId) ? new { HasAccess = true } : new { HasAccess = false };
   }

@@ -7,6 +7,6 @@ export class ToastService {
 
   show(message: string) {
     this.toasts.push({ message });
-    setTimeout(() => this.toasts.shift(), 3000);
+    setTimeout(() => this.toasts.shift(), 5000);
   }
 }
