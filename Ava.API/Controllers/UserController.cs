@@ -47,7 +47,6 @@ public class UserController : ControllerBase
     return Ok(userDtos);
   }
 
-  [Authorize(Policy = "MustBeAdmin")]
   [HttpPost("updateUser")]
   public async Task<IActionResult> Update([FromBody] CredentialsDto dto)
   {
