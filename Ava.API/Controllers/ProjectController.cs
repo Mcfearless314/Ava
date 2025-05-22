@@ -81,7 +81,7 @@ public class ProjectController : ControllerBase
     return Ok(new { Message = "User removed from project successfully!" });
   }
 
-  [Authorize(Policy = "MustBeProjectManager")]
+  [Authorize(Policy = "MustBeAdminOrProjectManager")]
   [HttpPost("addUserToProject/{projectId}/{userId}")]
   public async Task<IActionResult> AddUserToProject([FromRoute] Guid userId, [FromRoute] Guid projectId)
   {
